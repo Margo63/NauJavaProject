@@ -14,5 +14,21 @@
 <form th:action="@{/reports}" method="post">
     <div><input type="submit" value="report"/></div>
 </form>
+<form th:action="@{/custom/tasks/add}" method="post">
+
+    <div><label> Title: <input type="text" name="title"/> </label></div>
+    <div><label> Description : <input type="text" name="description"/> </label></div>
+    <div><input type="submit" value="add task"/></div>
+</form>
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+    </tr>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+    </tr>
+</table>
 </body>
 </html>
