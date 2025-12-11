@@ -15,6 +15,8 @@ import java.util.Optional;
  */
 @RepositoryRestResource(path = "users_data")
 public interface UserDataRepository extends CrudRepository<UserData, Long> {
+
     Optional<UserData> findById(Long id);
+    void deleteById(Long id);
 
 }

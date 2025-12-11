@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 public class UserData {
     @Id
     private Long id;
-
     @Column
     private String surname;
 
@@ -16,7 +15,6 @@ public class UserData {
 
     @Column
     private String job;
-
     public UserData() {
         this.surname = "";
         this.patronymic = "";

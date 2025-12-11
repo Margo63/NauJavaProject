@@ -1,6 +1,8 @@
 package ru.margarita.NauJava.domain;
 
 import ru.margarita.NauJava.entities.Task;
+import ru.margarita.NauJava.entities.User;
+
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
  */
 public interface TaskService
 {
-    boolean createTask(Long id, String title, String description);
+    boolean createTask(String title, String description, User user);
     Task findById(Long id);
     boolean deleteById(Long id);
     boolean updateTitle(Long id, String newTitle);

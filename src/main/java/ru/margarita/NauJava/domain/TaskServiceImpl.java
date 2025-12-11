@@ -3,7 +3,9 @@ package ru.margarita.NauJava.domain;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.margarita.NauJava.entities.User;
 import ru.margarita.NauJava.repositories.TaskRepository;
+import ru.margarita.NauJava.repositories.UserDataRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
 
@@ -20,11 +22,13 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final UserDataRepository userDataRepository;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
+        this.userDataRepository = userDataRepository;
     }
 
     @Transactional
@@ -35,13 +39,16 @@ public class TaskServiceImpl implements TaskService {
         for (Task task : tasks) {
             taskRepository.delete(task);
         }
+        User user = userRepository.findByName(name).getFirst();
+        userDataRepository.deleteById(user.getId());
         // удалить пользователя
         userRepository.deleteByName(name);
     }
 
     @Override
-    public boolean createTask(Long id, String title, String description) {
-        return false;
+    public boolean createTask(String title, String description, User user) {
+        Task task = new Task(description, title, user);
+        return true;
     }
 
     @Override
