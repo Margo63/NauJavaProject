@@ -1,5 +1,6 @@
 package ru.margarita.NauJava.controllers;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,4 +48,5 @@ public class TaskController {
         taskRepository.delete(task.get());
         return "redirect:/custom/users/view/user";
     }
+
 }

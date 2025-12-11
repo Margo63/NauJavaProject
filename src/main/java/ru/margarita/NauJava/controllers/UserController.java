@@ -3,8 +3,11 @@ package ru.margarita.NauJava.controllers;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.margarita.NauJava.entities.Task;
+import ru.margarita.NauJava.repositories.TaskRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.User;
+
 import java.util.List;
 
 /**
@@ -19,26 +22,30 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+
     @GetMapping("/findByName")
-    public List<User> findByName(@RequestParam String name)
-    {
+    public List<User> findByName(@RequestParam String name) {
         return userRepository.findByName(name);
     }
+
     @GetMapping("/findByEmailAndPassword")
-    public List<User> findByEmailAndPassword(@RequestParam String email, @RequestParam String password)
-    {
-        return userRepository.findByEmailAndPassword(email,password);
+    public List<User> findByEmailAndPassword(@RequestParam String email, @RequestParam String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
+
     @PostMapping("/addUser")
-    public void addUser(@RequestParam String name,@RequestParam String email, @RequestParam String password)
-    {
-        User user = new User(name,email,password);
+    public void addUser(@RequestParam String name, @RequestParam String email, @RequestParam String password) {
+        User user = new User(name, email, password);
         userRepository.save(user);
     }
-    @Transactional
-    @DeleteMapping("/deleteByName")
-    public void deleteByName(@RequestParam String name)
-    {
-        userRepository.deleteByName(name);
-    }
+
+//    @Transactional
+//    @DeleteMapping("/deleteByName")
+//    public void deleteByName(@RequestParam String name) {
+//        List<Task> tasks = taskRepository.findTasksByUserName(name);
+//        taskRepository.deleteAll(tasks);
+//        userRepository.deleteByName(name);
+//    }
 }

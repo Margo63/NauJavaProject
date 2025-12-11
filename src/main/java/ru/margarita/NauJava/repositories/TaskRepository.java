@@ -17,4 +17,6 @@ import java.util.List;
 public interface TaskRepository extends CrudRepository<Task, Long> {
     @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE %:name%")
     List<Task> findTasksByUserName(String name);
+
+    void deleteByUserId(Long id);
 }

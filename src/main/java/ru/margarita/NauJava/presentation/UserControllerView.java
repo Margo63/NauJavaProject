@@ -1,11 +1,14 @@
 package ru.margarita.NauJava.presentation;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.margarita.NauJava.domain.TaskService;
+import ru.margarita.NauJava.domain.TaskServiceImpl;
 import ru.margarita.NauJava.repositories.TaskRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
@@ -23,6 +26,9 @@ import ru.margarita.NauJava.entities.User;
 public class UserControllerView {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TaskServiceImpl taskService;
 
     @Autowired
     private TaskRepository taskRepository;
@@ -43,5 +49,10 @@ public class UserControllerView {
         return "user";
     }
 
-
+    @Transactional
+    @PostMapping("/delete")
+    public String delete(@RequestParam String name) {
+        taskService.deleteUserByName(name);
+        return "redirect:/login";
+    }
 }

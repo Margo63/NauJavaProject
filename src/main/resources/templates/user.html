@@ -5,6 +5,10 @@
 </head>
 <body>
 <h1><span th:text="${name}"></span></h1>
+<form action="/custom/users/view/delete" method="post">
+    <input type="hidden" name="name" th:value="${name}"/>
+    <div><input type="submit" value="delete account"/></div>
+</form>
 <form th:action="@{/logout}" method="post">
     <div><input type="submit" value="logout" id = "logout"/></div>
 </form>
@@ -20,6 +24,7 @@
     <div><label> Description : <input type="text" name="description"/> </label></div>
     <div><input type="submit" value="add task"/></div>
 </form>
+
 <table border="1">
     <tr>
         <th>Title</th>
