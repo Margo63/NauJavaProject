@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User findUserByName(String name) {
+        return userRepository.findByName(name).getFirst();
+    }
+
+    @Override
     public boolean deleteById(Long id) {
         userRepository.deleteById(id);
         return true;
@@ -38,9 +43,9 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public boolean updateUser(Long id, String newEmail, String newPassword) {
-        userRepository.updateUserEmailAndPassword(id, newEmail, newPassword);
-        return false;
+    public boolean updateUserEmail(Long id, String newEmail) {
+        userRepository.updateUserEmail(id, newEmail);
+        return true;
     }
 
     @Override

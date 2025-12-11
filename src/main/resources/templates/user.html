@@ -5,6 +5,36 @@
 </head>
 <body>
 <h1><span th:text="${name}"></span></h1>
+<form action="/custom/users/view/update" method="post">
+    <input type="hidden" name="name" th:value="${name}"/>
+    <div>
+        <label>Почта пользователя:</label>
+        <input type="text" name="email"
+               th:value="${email}"
+               required
+               placeholder="Введите почту"/>
+    </div>
+    <div>
+        <label>Фамилия пользователя:</label>
+        <input type="text" name="surname"
+               th:value="${surname}"
+               placeholder="Введите фамилию"/>
+    </div>
+    <div>
+        <label>Отчество пользователя:</label>
+        <input type="text" name="patronymic"
+               th:value="${patronymic}"
+               placeholder="Введите отчество"/>
+    </div>
+    <div>
+        <label>Работа пользователя:</label>
+        <input type="text" name="job"
+               th:value="${job}"
+               placeholder="Введите место работы"/>
+    </div>
+    <div><input type="submit" value="save"/></div>
+</form>
+
 <form action="/custom/users/view/delete" method="post">
     <input type="hidden" name="name" th:value="${name}"/>
     <div><input type="submit" value="delete account"/></div>

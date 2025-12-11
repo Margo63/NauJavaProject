@@ -4,11 +4,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.margarita.NauJava.domain.TaskService;
 import ru.margarita.NauJava.domain.TaskServiceImpl;
+import ru.margarita.NauJava.domain.UserDataServiceImpl;
+import ru.margarita.NauJava.domain.UserServiceImpl;
+import ru.margarita.NauJava.entities.UserData;
 import ru.margarita.NauJava.repositories.TaskRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
@@ -25,7 +29,10 @@ import ru.margarita.NauJava.entities.User;
 @RequestMapping(value = "/custom/users/view", method = RequestMethod.GET)
 public class UserControllerView {
     @Autowired
-    private UserRepository userRepository;
+    private UserServiceImpl userService;
+
+    @Autowired
+    private UserDataServiceImpl userDataService;
 
     @Autowired
     private TaskServiceImpl taskService;
@@ -35,7 +42,7 @@ public class UserControllerView {
 
     @GetMapping("/list")
     public String userListView(Model model){
-        Iterable<User> products = userRepository.findAll();
+        Iterable<User> products = userService.getAllUsers();
         model.addAttribute("users",products);
         return "userList";
     }
@@ -43,16 +50,39 @@ public class UserControllerView {
     public String getUserInfo(Model model)
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("name", auth.getName());
+        User user = userService.findUserByName(auth.getName());
+        UserData data = userDataService.findUserDataById(user.getId());
+        saveData(model, user, data);
         Iterable<Task> tasks = taskRepository.findTasksByUserName(auth.getName());
         model.addAttribute("tasks",tasks);
         return "user";
     }
 
     @Transactional
+    @PostMapping("/update")
+    public String update(Model model,String name, String email, String surname, String patronymic, String job) {
+        System.out.println("in update");
+        User user = userService.findUserByName(name);
+        userService.updateUserEmail(user.getId(), email);
+
+        userDataService.updateUser(user.getId(), surname, patronymic, job);
+        saveData(model,
+                userService.findUserById(user.getId()),
+                userDataService.findUserDataById(user.getId()));
+        return "user";
+    }
+    @Transactional
     @PostMapping("/delete")
     public String delete(@RequestParam String name) {
         taskService.deleteUserByName(name);
         return "redirect:/login";
+    }
+
+    private void saveData(Model model, User user, UserData data){
+        model.addAttribute("name", user.getName());
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("surname", data.getSurname());
+        model.addAttribute("patronymic", data.getPatronymic());
+        model.addAttribute("job", data.getJob());
     }
 }

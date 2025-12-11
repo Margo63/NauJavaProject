@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.controllers;
+package ru.margarita.NauJava.presentation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.margarita.NauJava.entities.UserData;
 import ru.margarita.NauJava.repositories.UserDataRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
