@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.data.repositories;
+package ru.margarita.NauJava.repositories;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

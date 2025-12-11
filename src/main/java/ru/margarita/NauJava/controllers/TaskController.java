@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.margarita.NauJava.data.repositories.TaskRepository;
-import ru.margarita.NauJava.data.repositories.UserRepository;
+import ru.margarita.NauJava.repositories.TaskRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Класс контроллер для взаимодействия с бд через репозиторий
@@ -39,6 +39,12 @@ public class TaskController {
         User user = userRepository.findByName(auth.getName()).getFirst();
         Task task = new Task(description,title,user);
         taskRepository.save(task);
+        return "redirect:/custom/users/view/user";
+    }
+    @PostMapping("/delete")
+    public String deleteTask(@RequestParam Long id){
+        Optional<Task> task = taskRepository.findById(id);
+        taskRepository.delete(task.get());
         return "redirect:/custom/users/view/user";
     }
 }

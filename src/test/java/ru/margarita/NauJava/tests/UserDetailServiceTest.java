@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ru.margarita.NauJava.data.repositories.UserRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.domain.UserDetailServiceImpl;
 import ru.margarita.NauJava.entities.User;
 

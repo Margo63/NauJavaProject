@@ -1,17 +1,258 @@
+<!-- src/main/resources/templates/registration.html -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example </title>
+    <title>Регистрация</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registration-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .weak {
+            color: #dc3545;
+        }
+
+        .medium {
+            color: #ffc107;
+        }
+
+        .strong {
+            color: #28a745;
+        }
+    </style>
 </head>
 <body>
-<div th:if="${errorMessage}">
-    <div th:text="${errorMessage}"></div>
+<div class="registration-container">
+    <h1>Регистрация</h1>
+
+    <!-- Сообщение об ошибке -->
+    <div th:if="${errorMessage}" class="error-message">
+        <div th:utext="${#strings.replace(errorMessage, '&#10;', '<br>')}"></div>
+    </div>
+
+    <!-- Сообщение об успехе -->
+    <div th:if="${successMessage}" class="success-message">
+        <div th:text="${successMessage}"></div>
+    </div>
+
+    <form th:action="@{/registration}" method="post">
+        <div class="form-group">
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username"
+                   th:value="${usernameValue}"
+                   required
+                   autofocus
+                   placeholder="Введите имя пользователя"/>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email"
+                   th:value="${emailValue}"
+                   required
+                   placeholder="example@mail.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password"
+                   required
+                   placeholder="Минимум 6 символов"
+                   onkeyup="checkPasswordStrength()"/>
+            <div id="passwordStrength" class="password-strength"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Подтвердите пароль:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword"
+                   required
+                   placeholder="Повторите пароль"/>
+            <div id="passwordMatch" class="password-strength"></div>
+        </div>
+
+        <div>
+            <input type="submit" value="Зарегистрироваться"/>
+        </div>
+    </form>
+
+    <div class="links">
+        <a th:href="@{/login}">Уже есть аккаунт? Войти</a>
+    </div>
 </div>
-<form th:action="@{/registration}" method="post">
-    <div><label> User Name : <input type="text" name="name"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><label> User email : <input type="text" name="email"/> </label></div>
-    <div><input type="submit" value="Зарегистрироваться"/></div>
-</form>
+
+<script>
+    // Проверка сложности пароля
+    function checkPasswordStrength() {
+        const password = document.getElementById('password').value;
+        const strengthText = document.getElementById('passwordStrength');
+
+        if (password.length === 0) {
+            strengthText.textContent = '';
+            strengthText.className = 'password-strength';
+            return;
+        }
+
+        let strength = 0;
+        if (password.length >= 6) strength++;
+        if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+        if (password.match(/\d/)) strength++;
+        if (password.match(/[^a-zA-Z\d]/)) strength++;
+
+        if (strength < 2) {
+            strengthText.textContent = 'Слабый пароль';
+            strengthText.className = 'password-strength weak';
+        } else if (strength < 4) {
+            strengthText.textContent = 'Средний пароль';
+            strengthText.className = 'password-strength medium';
+        } else {
+            strengthText.textContent = 'Сильный пароль';
+            strengthText.className = 'password-strength strong';
+        }
+
+        checkPasswordMatch();
+    }
+
+    // Проверка совпадения паролей
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const matchText = document.getElementById('passwordMatch');
+
+        if (confirmPassword.length === 0) {
+            matchText.textContent = '';
+            return;
+        }
+
+        if (password === confirmPassword) {
+            matchText.textContent = '✓ Пароли совпадают';
+            matchText.className = 'password-strength strong';
+        } else {
+            matchText.textContent = '✗ Пароли не совпадают';
+            matchText.className = 'password-strength weak';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('confirmPassword').addEventListener('keyup', checkPasswordMatch);
+
+        // Валидация формы перед отправкой
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Пароли не совпадают!');
+                return false;
+            }
+
+            if (password.length < 6) {
+                e.preventDefault();
+                alert('Пароль должен содержать минимум 6 символов!');
+                return false;
+            }
+
+            return true;
+        });
+    });
+</script>
 </body>
 </html>

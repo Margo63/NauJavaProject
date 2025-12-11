@@ -32,6 +32,7 @@ public class SpringSecurityConfig
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
+
                         .requestMatchers("/login", "/registration").permitAll()
                         .requestMatchers("/swagger-ui/**").hasRole(ADMIN)
                         .requestMatchers("/custom/users/**").hasAnyRole(ADMIN, "USER")
@@ -39,6 +40,8 @@ public class SpringSecurityConfig
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/custom/users/view/user", true)
                         .permitAll()
                 )

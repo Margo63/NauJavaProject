@@ -24,10 +24,17 @@
     <tr>
         <th>Title</th>
         <th>Description</th>
+
     </tr>
     <tr th:each="task : ${tasks}">
         <td th:text="${task.title}"></td>
         <td th:text="${task.description}"></td>
+        <td>
+            <form th:action="@{/custom/tasks/delete}" method="post" >
+                <input type="hidden" name="id" th:value="${task.id}"/>
+                <div><input type="submit" value="delete"/></div>
+            </form>
+        </td>
     </tr>
 </table>
 </body>

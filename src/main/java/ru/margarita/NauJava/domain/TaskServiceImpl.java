@@ -3,8 +3,8 @@ package ru.margarita.NauJava.domain;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.margarita.NauJava.data.repositories.TaskRepository;
-import ru.margarita.NauJava.data.repositories.UserRepository;
+import ru.margarita.NauJava.repositories.TaskRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
 
 import java.util.List;

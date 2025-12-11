@@ -2,9 +2,9 @@ package ru.margarita.NauJava.domain;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import ru.margarita.NauJava.data.repositories.ReportRepository;
-import ru.margarita.NauJava.data.repositories.TaskRepository;
-import ru.margarita.NauJava.data.repositories.UserRepository;
+import ru.margarita.NauJava.repositories.ReportRepository;
+import ru.margarita.NauJava.repositories.TaskRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Report;
 import ru.margarita.NauJava.entities.ReportStatus;
 import ru.margarita.NauJava.entities.Task;

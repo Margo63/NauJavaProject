@@ -3,7 +3,7 @@ package ru.margarita.NauJava.controllers;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.margarita.NauJava.data.repositories.UserRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.User;
 import java.util.List;
 
