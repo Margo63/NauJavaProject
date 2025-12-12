@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.domain;
+package ru.margarita.NauJava.domain.userData;
 
 
 import ru.margarita.NauJava.entities.UserData;

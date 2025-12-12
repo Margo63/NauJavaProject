@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+<h1><span th:text="${name}"></span></h1>
+<h3><span th:text="${email}"></span></h3>
+<h3><span th:text="${job}"></span></h3>
+<h3><span th:text="${surname}"></span></h3>
+<h3><span th:text="${patronymic}"></span></h3>
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+
+    </tr>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+    </tr>
+</table>
+</body>
+</html>

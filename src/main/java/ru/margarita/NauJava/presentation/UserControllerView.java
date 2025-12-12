@@ -4,17 +4,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.margarita.NauJava.domain.TaskService;
-import ru.margarita.NauJava.domain.TaskServiceImpl;
-import ru.margarita.NauJava.domain.UserDataServiceImpl;
-import ru.margarita.NauJava.domain.UserServiceImpl;
+import ru.margarita.NauJava.domain.task.TaskServiceImpl;
+import ru.margarita.NauJava.domain.userData.UserDataServiceImpl;
+import ru.margarita.NauJava.domain.user.UserServiceImpl;
 import ru.margarita.NauJava.entities.UserData;
-import ru.margarita.NauJava.repositories.TaskRepository;
-import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 
@@ -37,8 +33,6 @@ public class UserControllerView {
     @Autowired
     private TaskServiceImpl taskService;
 
-    @Autowired
-    private TaskRepository taskRepository;
 
     @GetMapping("/list")
     public String userListView(Model model){
@@ -53,7 +47,7 @@ public class UserControllerView {
         User user = userService.findUserByName(auth.getName());
         UserData data = userDataService.findUserDataById(user.getId());
         saveData(model, user, data);
-        Iterable<Task> tasks = taskRepository.findTasksByUserName(auth.getName());
+        Iterable<Task> tasks = taskService.findTasksByUserName(auth.getName());
         model.addAttribute("tasks",tasks);
         return "user";
     }

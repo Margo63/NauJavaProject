@@ -34,7 +34,7 @@
     </div>
     <div><input type="submit" value="save"/></div>
 </form>
-
+<br>
 <form action="/custom/users/view/delete" method="post">
     <input type="hidden" name="name" th:value="${name}"/>
     <div><input type="submit" value="delete account"/></div>
@@ -72,5 +72,8 @@
         </td>
     </tr>
 </table>
+<form action="/custom/friends/friendList" method="get">
+    <div><input type="submit" value="friends list"/></div>
+</form>
 </body>
 </html>

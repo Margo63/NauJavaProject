@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.domain;
+package ru.margarita.NauJava.domain.task;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +43,11 @@ public class TaskServiceImpl implements TaskService {
         userDataRepository.deleteById(user.getId());
         // удалить пользователя
         userRepository.deleteByName(name);
+    }
+
+    @Override
+    public List<Task> findTasksByUserName(String name) {
+        return taskRepository.findTasksByUserName(name);
     }
 
     @Override

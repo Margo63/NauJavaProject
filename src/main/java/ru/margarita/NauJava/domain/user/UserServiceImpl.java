@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.domain;
+package ru.margarita.NauJava.domain.user;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByName(String name) {
-        return userRepository.findByName(name).getFirst();
+        List<User> users = userRepository.findByName(name);
+        if(users.isEmpty()) return null;
+        return users.getFirst();
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.margarita.NauJava.repositories.TaskRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
-import ru.margarita.NauJava.domain.TaskService;
+import ru.margarita.NauJava.domain.task.TaskService;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 

@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.domain;
+package ru.margarita.NauJava.domain.task;
 
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
@@ -20,4 +20,6 @@ public interface TaskService
     boolean updateTitle(Long id, String newTitle);
     List<Task> getAll();
     void deleteUserByName(String name);
+
+    List<Task> findTasksByUserName(String name);
 }

@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.domain;
+package ru.margarita.NauJava.domain.user;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.margarita.NauJava.entities.User;
