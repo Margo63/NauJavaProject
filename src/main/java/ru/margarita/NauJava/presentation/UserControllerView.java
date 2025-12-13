@@ -7,15 +7,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.margarita.NauJava.domain.category.CategoryServiceImpl;
 import ru.margarita.NauJava.domain.status.StatusService;
 import ru.margarita.NauJava.domain.status.StatusServiceImpl;
 import ru.margarita.NauJava.domain.task.TaskServiceImpl;
 import ru.margarita.NauJava.domain.userData.UserDataServiceImpl;
 import ru.margarita.NauJava.domain.user.UserServiceImpl;
-import ru.margarita.NauJava.entities.Status;
-import ru.margarita.NauJava.entities.UserData;
-import ru.margarita.NauJava.entities.Task;
-import ru.margarita.NauJava.entities.User;
+import ru.margarita.NauJava.entities.*;
 
 import java.util.List;
 
@@ -41,6 +39,9 @@ public class UserControllerView {
     @Autowired
     private StatusServiceImpl statusService;
 
+    @Autowired
+    private CategoryServiceImpl categoryService;
+
 
     @GetMapping("/list")
     public String userListView(Model model){
@@ -60,6 +61,9 @@ public class UserControllerView {
 
         List<Status> statusList = statusService.getAllStatuses();
         model.addAttribute("statuses",statusList);
+
+        List<Category> categoryList = categoryService.getAllCategories();
+        model.addAttribute("categories",categoryList);
         return "user";
     }
 

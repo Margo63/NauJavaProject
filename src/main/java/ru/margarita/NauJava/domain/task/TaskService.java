@@ -21,6 +21,7 @@ public interface TaskService
     boolean updateTitle(Long id, String newTitle);
 
     void updateStatus(Long id, Long statusId);
+    void updateCategory(Long id, Long categoryId);
     List<Task> getAll();
     void deleteUserByName(String name);
 

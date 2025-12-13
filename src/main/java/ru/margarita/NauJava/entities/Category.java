@@ -19,10 +19,12 @@ public class Category
     private Long id;
     @Column(unique = true)
     private String title;
+    @Column(nullable = false)
+    private CategoryCode code;
     @Column
     private String description;
     @Column
-    private Color color;
+    private String color;
 
     public Long getId()
     {
@@ -49,11 +51,19 @@ public class Category
         this.description = description;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(String color) {
         this.color = color;
+    }
+
+    public CategoryCode getCode() {
+        return code;
+    }
+
+    public void setCode(CategoryCode code) {
+        this.code = code;
     }
 }

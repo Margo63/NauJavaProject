@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
+import ru.margarita.NauJava.entities.Category;
 import ru.margarita.NauJava.entities.Status;
 import ru.margarita.NauJava.entities.Task;
 import java.util.List;
@@ -26,6 +27,11 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
     @Transactional
     @Query("UPDATE Task t SET t.status = :status  WHERE t.id = :id")
     void updateTaskStatus(@Param("id") Long id, @Param("status") Status status);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Task t SET t.category = :category  WHERE t.id = :id")
+    void updateTaskCategory(@Param("id") Long id, @Param("category") Category category);
 
     void deleteByUserId(Long id);
 }

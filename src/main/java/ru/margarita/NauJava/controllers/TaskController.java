@@ -25,7 +25,7 @@ import java.util.Optional;
  * @version 1.0
  * @since 2025-10-27
  */
-@Controller
+@RestController
 @RequestMapping("/custom/tasks")
 public class TaskController {
     @Autowired
@@ -47,19 +47,24 @@ public class TaskController {
         taskService.createTask(title, description, user);
         return "redirect:/custom/users/view/user";
     }
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteTask(@RequestParam Long id){
         taskService.deleteById(id);
         return "redirect:/custom/users/view/user";
     }
 
     @Transactional
-    @PostMapping("/selectStatus")
+    @PutMapping("/selectStatus")
     public String selectStatus(@RequestParam Long taskId, @RequestParam Long newStatusId){
+
         taskService.updateStatus(taskId, newStatusId);
-//        Optional<Task> task = taskRepository.findById(id);
-//        taskRepository.delete(task.get());
         return "redirect:/custom/users/view/user";
     }
 
+    @Transactional
+    @PutMapping("/selectCategory")
+    public String selectCategory(@RequestParam Long taskId, @RequestParam Long newCategoryId){
+        taskService.updateCategory(taskId, newCategoryId);
+        return "redirect:/custom/users/view/user";
+    }
 }

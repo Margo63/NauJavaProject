@@ -3,14 +3,8 @@ package ru.margarita.NauJava.domain.task;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.margarita.NauJava.entities.Status;
-import ru.margarita.NauJava.entities.StatusCodes;
-import ru.margarita.NauJava.entities.User;
-import ru.margarita.NauJava.repositories.StatusRepository;
-import ru.margarita.NauJava.repositories.TaskRepository;
-import ru.margarita.NauJava.repositories.UserDataRepository;
-import ru.margarita.NauJava.repositories.UserRepository;
-import ru.margarita.NauJava.entities.Task;
+import ru.margarita.NauJava.entities.*;
+import ru.margarita.NauJava.repositories.*;
 
 import java.util.List;
 
@@ -28,13 +22,14 @@ public class TaskServiceImpl implements TaskService {
     private final UserDataRepository userDataRepository;
     private final StatusRepository statusRepository;
 
-
+    private final CategoryRepository categoryRepository;
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository, StatusRepository statusRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository, StatusRepository statusRepository, CategoryRepository categoryRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.userDataRepository = userDataRepository;
         this.statusRepository = statusRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
@@ -61,6 +56,11 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task(description, title, user);
         Status status = statusRepository.findByCode(StatusCodes.PENDING);
         task.setStatus(status);
+        System.out.println("???????????????????????"+status.getTitle());
+        Category category = categoryRepository.findByCode(CategoryCode.OTHERS);
+        System.out.println("???????????????????????"+category);
+        task.setCategory(category);
+        System.out.println(category.getTitle());
         taskRepository.save(task);
         return true;
     }
@@ -86,6 +86,12 @@ public class TaskServiceImpl implements TaskService {
     public void updateStatus(Long id, Long statusId) {
         Status status = statusRepository.findById(statusId).get();
         taskRepository.updateTaskStatus(id, status);
+    }
+
+    @Override
+    public void updateCategory(Long id, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).get();
+        taskRepository.updateTaskCategory(id, category);
     }
 
     @Override
