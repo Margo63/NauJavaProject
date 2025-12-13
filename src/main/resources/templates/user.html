@@ -65,6 +65,20 @@
         <td th:text="${task.title}"></td>
         <td th:text="${task.description}"></td>
         <td>
+            <form id="selectForm" th:action="@{/custom/tasks/selectStatus}" method="post">
+                <input type="hidden" name="taskId" th:value="${task.id}"/>
+
+                <select name="newStatusId" onchange="this.form.submit()">
+                    <option value="">-- Change status --</option>
+                    <option th:each="status : ${statuses}"
+                            th:value="${status.id}"
+                            th:text="${status.title}"
+                            th:selected="${task.status != null and status.id == task.status.id}">
+                    </option>
+                </select>
+            </form>
+        </td>
+        <td>
             <form th:action="@{/custom/tasks/delete}" method="post" >
                 <input type="hidden" name="id" th:value="${task.id}"/>
                 <div><input type="submit" value="delete"/></div>

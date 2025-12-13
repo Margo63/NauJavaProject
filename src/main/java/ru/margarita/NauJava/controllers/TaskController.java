@@ -1,11 +1,15 @@
 package ru.margarita.NauJava.controllers;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.margarita.NauJava.domain.status.StatusServiceImpl;
+import ru.margarita.NauJava.domain.task.TaskServiceImpl;
+import ru.margarita.NauJava.entities.Status;
+import ru.margarita.NauJava.entities.StatusCodes;
 import ru.margarita.NauJava.repositories.TaskRepository;
 import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
@@ -25,27 +29,36 @@ import java.util.Optional;
 @RequestMapping("/custom/tasks")
 public class TaskController {
     @Autowired
-    private TaskRepository taskRepository;
+    private TaskServiceImpl taskService;
+
     @Autowired
     private UserRepository userRepository;
 
+
     @GetMapping("/findTasksByUserName")
     public List<Task> findTasksByUserName(@RequestParam String name){
-        return  taskRepository.findTasksByUserName(name);
+        return  taskService.findTasksByUserName(name);
     }
 
     @PostMapping("/add")
     public String addTask(@RequestParam String title, @RequestParam String description){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByName(auth.getName()).getFirst();
-        Task task = new Task(description,title,user);
-        taskRepository.save(task);
+        taskService.createTask(title, description, user);
         return "redirect:/custom/users/view/user";
     }
     @PostMapping("/delete")
     public String deleteTask(@RequestParam Long id){
-        Optional<Task> task = taskRepository.findById(id);
-        taskRepository.delete(task.get());
+        taskService.deleteById(id);
+        return "redirect:/custom/users/view/user";
+    }
+
+    @Transactional
+    @PostMapping("/selectStatus")
+    public String selectStatus(@RequestParam Long taskId, @RequestParam Long newStatusId){
+        taskService.updateStatus(taskId, newStatusId);
+//        Optional<Task> task = taskRepository.findById(id);
+//        taskRepository.delete(task.get());
         return "redirect:/custom/users/view/user";
     }
 

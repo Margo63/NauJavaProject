@@ -1,5 +1,6 @@
 package ru.margarita.NauJava.domain.task;
 
+import ru.margarita.NauJava.entities.Status;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 
@@ -18,6 +19,8 @@ public interface TaskService
     Task findById(Long id);
     boolean deleteById(Long id);
     boolean updateTitle(Long id, String newTitle);
+
+    void updateStatus(Long id, Long statusId);
     List<Task> getAll();
     void deleteUserByName(String name);
 
