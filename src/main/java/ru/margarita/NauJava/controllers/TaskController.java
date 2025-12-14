@@ -15,6 +15,11 @@ import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,10 +46,13 @@ public class TaskController {
     }
 
     @PostMapping("/add")
-    public String addTask(@RequestParam String title, @RequestParam String description){
+    public String addTask(@RequestParam String title, @RequestParam String description,
+                          @RequestParam Long categoryId, @RequestParam String dueDate) throws ParseException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByName(auth.getName()).getFirst();
-        taskService.createTask(title, description, user);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = formatter.parse(dueDate);
+        taskService.createTask(title, description,categoryId,date, user);
         return "redirect:/custom/users/view/user";
     }
     @DeleteMapping("/delete")

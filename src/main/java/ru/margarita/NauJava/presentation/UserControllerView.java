@@ -44,32 +44,60 @@ public class UserControllerView {
 
 
     @GetMapping("/list")
-    public String userListView(Model model){
+    public String userListView(Model model) {
         Iterable<User> products = userService.getAllUsers();
-        model.addAttribute("users",products);
+        model.addAttribute("users", products);
         return "userList";
     }
+
     @GetMapping("/user")
-    public String getUserInfo(Model model)
-    {
+    public String getUserInfo(Model model, @RequestParam(name = "categoryId", required = false) Long categoryId,
+                              @RequestParam(name = "statusId", required = false) Long statusId) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByName(auth.getName());
         UserData data = userDataService.findUserDataById(user.getId());
         saveData(model, user, data);
-        Iterable<Task> tasks = taskService.findTasksByUserName(auth.getName());
-        model.addAttribute("tasks",tasks);
+
+        List<Task> tasks;
+        if (categoryId != null && categoryId != -1 && statusId != null && statusId != -1) {
+            tasks = taskService.findTasksByUserNameAndCategoryIdAndStatusId(auth.getName(), categoryId, statusId);
+        }else if(categoryId != null && categoryId != -1){
+            tasks = taskService.findTasksByUserNameAndCategoryId(auth.getName(), categoryId);
+        }else if(statusId != null && statusId != -1){
+            tasks = taskService.findTasksByUserNameAndStatusId(auth.getName(), statusId);
+        } else {
+            tasks = taskService.findTasksByUserName(auth.getName());
+        }
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("selectedStatusId", statusId);
 
         List<Status> statusList = statusService.getAllStatuses();
-        model.addAttribute("statuses",statusList);
+        model.addAttribute("statuses", statusList);
 
         List<Category> categoryList = categoryService.getAllCategories();
-        model.addAttribute("categories",categoryList);
+        model.addAttribute("categories", categoryList);
         return "user";
+    }
+
+    @GetMapping("/filterCategoryAndStatus")
+    public String filterCategoryAndStatus(@RequestParam(name = "selectFilterCategory", required = false) Long categoryId,
+                                          @RequestParam(name = "selectFilterStatus", required = false) Long statusId) {
+        if ((categoryId == null || categoryId == -1) && (statusId == null || statusId == -1)) {
+            return "redirect:/custom/users/view/user";
+        } else if (statusId == null || statusId == -1) {
+            return "redirect:/custom/users/view/user?categoryId=" + categoryId;
+        }else if (categoryId == null || categoryId == -1) {
+            return "redirect:/custom/users/view/user?statusId=" + statusId;
+        }
+        return "redirect:/custom/users/view/user?categoryId=" + categoryId+"&statusId="+statusId;
     }
 
     @Transactional
     @PostMapping("/update")
-    public String update(Model model,String name, String email, String surname, String patronymic, String job) {
+    public String update(Model model, String name, String email, String surname, String patronymic, String job) {
         User user = userService.findUserByName(name);
         userService.updateUserEmail(user.getId(), email);
 
@@ -77,8 +105,9 @@ public class UserControllerView {
         saveData(model,
                 userService.findUserById(user.getId()),
                 userDataService.findUserDataById(user.getId()));
-        return "user";
+        return "redirect:/custom/users/view/user";
     }
+
     @Transactional
     @PostMapping("/delete")
     public String delete(@RequestParam String name) {
@@ -86,7 +115,7 @@ public class UserControllerView {
         return "redirect:/login";
     }
 
-    private void saveData(Model model, User user, UserData data){
+    private void saveData(Model model, User user, UserData data) {
         model.addAttribute("name", user.getName());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("surname", data.getSurname());

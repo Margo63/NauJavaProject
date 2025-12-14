@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+<form>
+    <div><label> Title: <input type="text" id="taskTitle" /> </label></div>
+    <div><label> Description : <input type="text" id="taskDescription"/> </label></div>
+    <form>
+        Категория
+        <select class="category-select" id="taskCategoryId">
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.title}">
+            </option>
+        </select>
+    </form>
+    <div>
+        <label>Due Date: </label>
+        <input type="date" id="taskDueDate" name="dueDate"
+               th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"/>
+        <small>Срок выполнения</small>
+    </div>
+
+    <button class="add-btn"
+            onclick="addTask(this)">
+        add task
+    </button>
+</form>
+<script>
+    function addTask(button) {
+
+       const title = document.getElementById('taskTitle').value.trim();
+       const description = document.getElementById('taskDescription').value.trim()
+       const categoryId = document.getElementById('taskCategoryId').value.trim()
+       const dueDate = document.getElementById('taskDueDate').value.trim()
+       fetch('/custom/tasks/add', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded',
+           },
+           body: `title=${title}&description=${description}&categoryId=${categoryId}&dueDate=${dueDate}`
+       })
+       .then(response => {
+           if (response.ok) {
+               alert("ok")
+           } else {
+               throw new Error('Ошибка добавления');
+           }
+       })
+
+   }
+</script>
+</body>
+</html>

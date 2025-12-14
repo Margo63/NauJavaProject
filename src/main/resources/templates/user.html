@@ -48,11 +48,29 @@
 <form th:action="@{/reports}" method="post">
     <div><input type="submit" value="report"/></div>
 </form>
-<form th:action="@{/custom/tasks/add}" method="post">
-
-    <div><label> Title: <input type="text" name="title"/> </label></div>
-    <div><label> Description : <input type="text" name="description"/> </label></div>
+<form th:action="@{/custom/tasks/view/task}" method="get">
     <div><input type="submit" value="add task"/></div>
+</form>
+<form id="select" th:action="@{/custom/users/view/filterCategoryAndStatus}" method="get" >
+    <select name="selectFilterCategory">
+        <option th:value = "${-1}">None</option>>
+        <option th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.title}"
+                th:selected="${category.id} == ${selectedCategoryId}"
+        >
+        </option>
+    </select>
+    <select name="selectFilterStatus">
+        <option th:value = "${-1}">None</option>>
+        <option th:each="status : ${statuses}"
+                th:value="${status.id}"
+                th:text="${status.title}"
+                th:selected="${status.id} == ${selectedStatusId}"
+        >
+        </option>
+    </select>
+    <div><input type="submit" value="filter"/></div>
 </form>
 
 <table border="1">
@@ -66,8 +84,6 @@
         <td th:text="${task.description}"></td>
         <td>
             <form id="selectForm">
-                <input type="hidden" name="taskId" th:value="${task.id}"/>
-
                 <select class="status-select" th:data-task-id="${task.id}" onchange="updateStatus(this)">
                     <option th:each="status : ${statuses}"
                             th:value="${status.id}"
@@ -79,8 +95,6 @@
         </td>
         <td>
             <form id="selectCategory">
-                <input type="hidden" name="taskId" th:value="${task.id}"/>
-
                 <select class="category-select" th:data-task-id="${task.id}" onchange="updateCategory(this)">
                     <option th:each="category : ${categories}"
                             th:value="${category.id}"
@@ -133,31 +147,31 @@
     }
 
     function deleteTask(button) {
-    const taskId = button.dataset.taskId;
+        const taskId = button.dataset.taskId;
 
-    if (!confirm('Удалить задачу?')) return;
+        if (!confirm('Удалить задачу?')) return;
 
-    fetch('/custom/tasks/delete', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `id=${taskId}`
-    })
-    .then(response => {
-        if (response.ok) {
-            button.closest('tr').style.display = 'none';
-            button.textContent = 'Удалено';
-            button.disabled = true;
-        } else {
-            throw new Error('Ошибка удаления');
-        }
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Не удалось удалить задачу');
-    });
-}
+        fetch('/custom/tasks/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${taskId}`
+        })
+        .then(response => {
+            if (response.ok) {
+                button.closest('tr').style.display = 'none';
+                button.textContent = 'Удалено';
+                button.disabled = true;
+            } else {
+                throw new Error('Ошибка удаления');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Не удалось удалить задачу');
+        });
+    }
 </script>
 
 </body>

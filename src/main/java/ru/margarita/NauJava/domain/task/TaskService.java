@@ -1,9 +1,11 @@
 package ru.margarita.NauJava.domain.task;
 
+import ru.margarita.NauJava.entities.Category;
 import ru.margarita.NauJava.entities.Status;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public interface TaskService
 {
-    boolean createTask(String title, String description, User user);
+    boolean createTask(String title, String description, Long categoryId, Date dueDate, User user);
     Task findById(Long id);
     boolean deleteById(Long id);
     boolean updateTitle(Long id, String newTitle);
@@ -26,4 +28,10 @@ public interface TaskService
     void deleteUserByName(String name);
 
     List<Task> findTasksByUserName(String name);
+
+    List<Task> findTasksByUserNameAndCategoryId(String name, Long categoryId);
+
+    List<Task> findTasksByUserNameAndCategoryIdAndStatusId(String name, Long categoryId, Long statusId);
+
+    List<Task> findTasksByUserNameAndStatusId(String name, Long statusId);
 }

@@ -23,6 +23,14 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
     @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE %:name%")
     List<Task> findTasksByUserName(String name);
 
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.category.id = :categoryId")
+    List<Task> findTasksByUserNameAndCategoryId( @Param("name")String name,@Param("categoryId") Long categoryId);
+
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.category.id = :categoryId AND u.status.id = :statusId")
+    List<Task> findTasksByUserNameAndCategoryIdAndStatusId(@Param("name")String name,@Param("categoryId") Long categoryId,
+                                                           @Param("statusId") Long statusId);
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.status.id = :statusId")
+    List<Task> findTasksByUserNameAndStatusId(@Param("name")String name,@Param("statusId") Long statusId);
     @Modifying
     @Transactional
     @Query("UPDATE Task t SET t.status = :status  WHERE t.id = :id")
@@ -34,4 +42,7 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
     void updateTaskCategory(@Param("id") Long id, @Param("category") Category category);
 
     void deleteByUserId(Long id);
+
+
+
 }

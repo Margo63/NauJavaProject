@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.margarita.NauJava.entities.*;
 import ru.margarita.NauJava.repositories.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,15 +53,29 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean createTask(String title, String description, User user) {
+    public List<Task> findTasksByUserNameAndCategoryId(String name, Long categoryId) {
+        return taskRepository.findTasksByUserNameAndCategoryId(name, categoryId);
+    }
+
+    @Override
+    public List<Task> findTasksByUserNameAndCategoryIdAndStatusId(String name, Long categoryId, Long statusId) {
+        return taskRepository.findTasksByUserNameAndCategoryIdAndStatusId(name, categoryId, statusId);
+    }
+
+    @Override
+    public List<Task> findTasksByUserNameAndStatusId(String name, Long statusId) {
+        return taskRepository.findTasksByUserNameAndStatusId(name, statusId);
+    }
+
+    @Override
+    public boolean createTask(String title, String description, Long categoryId, Date dueDate, User user) {
         Task task = new Task(description, title, user);
         Status status = statusRepository.findByCode(StatusCodes.PENDING);
         task.setStatus(status);
-        System.out.println("???????????????????????"+status.getTitle());
-        Category category = categoryRepository.findByCode(CategoryCode.OTHERS);
-        System.out.println("???????????????????????"+category);
+        Category category = categoryRepository.findById(categoryId).get();
         task.setCategory(category);
-        System.out.println(category.getTitle());
+        task.setDueDate(dueDate);
+        task.setTimerValue(30);
         taskRepository.save(task);
         return true;
     }
