@@ -20,7 +20,6 @@ public interface TaskService
     boolean createTask(String title, String description, Long categoryId, Date dueDate, User user);
     Task findById(Long id);
     boolean deleteById(Long id);
-    boolean updateTitle(Long id, String newTitle);
 
     void updateStatus(Long id, Long statusId);
     void updateCategory(Long id, Long categoryId);
@@ -34,4 +33,8 @@ public interface TaskService
     List<Task> findTasksByUserNameAndCategoryIdAndStatusId(String name, Long categoryId, Long statusId);
 
     List<Task> findTasksByUserNameAndStatusId(String name, Long statusId);
+
+    void updateTask(Long id,String title, String description, Long categoryId,Long statusId, Date date);
+
+    void updateTimerValue(Long id, Integer timerValue);
 }

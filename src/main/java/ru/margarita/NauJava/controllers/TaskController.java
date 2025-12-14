@@ -55,6 +55,22 @@ public class TaskController {
         taskService.createTask(title, description,categoryId,date, user);
         return "redirect:/custom/users/view/user";
     }
+
+    @Transactional
+    @PutMapping("/update")
+    public void updateTask(@RequestParam Long id,@RequestParam String title, @RequestParam String description,@RequestParam Long categoryId,
+                          @RequestParam Long statusId, @RequestParam String dueDate) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = formatter.parse(dueDate);
+        taskService.updateTask(id, title, description,categoryId, statusId,date);
+    }
+
+    @Transactional
+    @PutMapping("/updateTimer")
+    public void updateTimer(@RequestParam Long id,@RequestParam Integer timerValue) {
+        System.out.println(id+" "+timerValue);
+        taskService.updateTimerValue(id, timerValue);
+    }
     @DeleteMapping("/delete")
     public String deleteTask(@RequestParam Long id){
         taskService.deleteById(id);

@@ -68,6 +68,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public void updateTask(Long id, String title, String description, Long categoryId, Long statusId, Date date) {
+        Status status = statusRepository.findById(statusId).get();
+        Category category = categoryRepository.findById(categoryId).get();
+        taskRepository.updateTask(id, title, description, category, status, date);
+    }
+
+    @Override
+    public void updateTimerValue(Long id, Integer timerValue) {
+        System.out.println(id+" "+timerValue);
+        taskRepository.updateTimerValue(id, timerValue);
+    }
+
+    @Override
     public boolean createTask(String title, String description, Long categoryId, Date dueDate, User user) {
         Task task = new Task(description, title, user);
         Status status = statusRepository.findByCode(StatusCodes.PENDING);
@@ -91,11 +104,6 @@ public class TaskServiceImpl implements TaskService {
         return true;
     }
 
-    @Override
-    public boolean updateTitle(Long id, String newTitle) {
-
-        return false;
-    }
 
     @Override
     public void updateStatus(Long id, Long statusId) {

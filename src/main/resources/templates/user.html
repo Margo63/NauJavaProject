@@ -48,7 +48,7 @@
 <form th:action="@{/reports}" method="post">
     <div><input type="submit" value="report"/></div>
 </form>
-<form th:action="@{/custom/tasks/view/task}" method="get">
+<form th:action="@{/custom/tasks/view/taskCreate}" method="get">
     <div><input type="submit" value="add task"/></div>
 </form>
 <form id="select" th:action="@{/custom/users/view/filterCategoryAndStatus}" method="get" >
@@ -105,12 +105,25 @@
             </form>
         </td>
         <td>
+            <form th:action="@{/custom/tasks/view/task}" method="get">
+                <input type="hidden" name="taskId" th:value="${task.id}"/>
+                <div><input type="submit" value="view"/></div>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/custom/tasks/view/taskEdit}" method="get">
+                <input type="hidden" name="taskId" th:value="${task.id}"/>
+                <div><input type="submit" value="edit"/></div>
+            </form>
+        </td>
+        <td>
             <button class="delete-btn"
                     th:data-task-id="${task.id}"
                     onclick="deleteTask(this)">
                 Удалить
             </button>
         </td>
+
     </tr>
 </table>
 <form action="/custom/friends/friendList" method="get">

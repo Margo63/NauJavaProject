@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Edit </title>
+</head>
+<body>
+<form action="/custom/users/view/user" method="get">
+    <div><input type="submit" value="на главную"/></div>
+</form>
+<form>
+    <div>Title: <span th:text="${task.title}"></span></div>
+    <div>Description: <span th:text="${task.description}"> </span></div>
+    <div>Категория: <span th:text="${task.category.title}"> </span></div>
+    <div>Статус: <span th:text="${task.status.title}"> </span></div>
+    <div>Due Date: <span th:text="${date}"> </span></div>
+    <div>
+        Таймер:
+        <span id="timer-display"
+              th:data-initial-value="${task.timerValue}"
+              th:text="${task.timerValue} + ' мин'">
+        0 мин
+    </span>
+    </div>
+    <button type="button"
+            th:data-task-id="${task.id}"
+            th:data-initial-value="${task.timerValue}"
+            onclick="startTimer(this)">
+        startTimer
+    </button>
+    <button type="button"
+            th:data-task-id="${task.id}"
+            onclick="resetTimer(this)">
+        Сбросить
+    </button>
+</form>
+<script>
+    let timers = new Map();
+
+    function startTimer(button) {
+        const taskId = button.dataset.taskId;
+        const display = document.getElementById('timer-display');
+
+        if (timers.has(taskId)) {
+            alert('Таймер уже запущен!');
+            return;
+        }
+
+        const initialMinutes = parseInt(button.dataset.initialValue) || 0;
+        let total = initialMinutes;
+
+        timers.set(taskId, {
+            intervalId: null,
+            startTime: Date.now(),
+            total: total,
+            display: display,
+            button: button
+        });
+
+        const timer = timers.get(taskId);
+        timer.intervalId = setInterval(() => {
+            total--;
+            updateDisplay(display, total);
+            saveTimerToServer(taskId, total);
+        }, 1000*60);
+
+        button.textContent = 'Пауза';
+        button.onclick = () => pauseTimer(button);
+    }
+
+    function updateDisplay(display, total) {
+       display.textContent =
+            total.toString().padStart(2, '0')+" мин";
+    }
+
+    function saveTimerToServer(taskId, minutes) {
+
+        fetch('/custom/tasks/updateTimer', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `id=${taskId}&timerValue=${minutes}`
+        }).catch(err => console.error('Ошибка:', err));
+    }
+
+    function pauseTimer(button) {
+            const taskId = button.dataset.taskId;
+            const timer = timers.get(taskId);
+
+            if (timer) {
+                clearInterval(timer.intervalId);
+                timers.delete(taskId);
+                button.textContent = 'Продолжить';
+                button.onclick = () => startTimer(button);
+            }
+    }
+    function resetTimer(button) {
+            const taskId = button.dataset.taskId;
+            const display = document.getElementById('timer-display');
+
+            if (timers.has(taskId)) {
+                const timer = timers.get(taskId);
+                clearInterval(timer.intervalId);
+                timers.delete(taskId);
+            }
+
+            updateDisplay(display, 30);
+            saveTimerToServer(taskId, 30);
+
+            const startBtn = document.querySelector(`[onclick="startTimer(this)"][data-task-id="${taskId}"]`);
+            if (startBtn) {
+                startBtn.textContent = 'startTimer';
+                startBtn.onclick = () => startTimer(startBtn);
+            }
+    }
+</script>
+
+</body>
+</html>

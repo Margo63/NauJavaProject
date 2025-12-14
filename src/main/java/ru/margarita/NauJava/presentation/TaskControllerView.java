@@ -10,9 +10,13 @@ import ru.margarita.NauJava.domain.category.CategoryService;
 import ru.margarita.NauJava.domain.category.CategoryServiceImpl;
 import ru.margarita.NauJava.domain.status.StatusService;
 import ru.margarita.NauJava.domain.status.StatusServiceImpl;
+import ru.margarita.NauJava.domain.task.TaskServiceImpl;
 import ru.margarita.NauJava.entities.Category;
 import ru.margarita.NauJava.entities.Status;
+import ru.margarita.NauJava.entities.Task;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -25,7 +29,10 @@ public class TaskControllerView {
     @Autowired
     private CategoryServiceImpl categoryService;
 
-    @GetMapping("/task")
+    @Autowired
+    private TaskServiceImpl taskService;
+
+    @GetMapping("/taskCreate")
     String createTask(Model model){
         List<Status> statusList = statusService.getAllStatuses();
         model.addAttribute("statuses", statusList);
@@ -34,5 +41,34 @@ public class TaskControllerView {
         model.addAttribute("categories", categoryList);
 
         return "createTask";
+    }
+
+    @GetMapping("/taskEdit")
+    String editTask(Model model, Long taskId){
+
+        List<Status> statusList = statusService.getAllStatuses();
+        model.addAttribute("statuses", statusList);
+
+        List<Category> categoryList = categoryService.getAllCategories();
+        model.addAttribute("categories", categoryList);
+
+        Task task = taskService.findById(taskId);
+        model.addAttribute("task", task);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        model.addAttribute("date", formatter.format(task.getDueDate()));
+        return "editTask";
+    }
+
+    @GetMapping("/task")
+    String getTask(Model model, Long taskId){
+        Task task = taskService.findById(taskId);
+        model.addAttribute("task", task);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        model.addAttribute("date", formatter.format(task.getDueDate()));
+        return "task";
     }
 }
