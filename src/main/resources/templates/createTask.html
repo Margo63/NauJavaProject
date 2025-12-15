@@ -8,8 +8,8 @@
     <div><input type="submit" value="на главную"/></div>
 </form>
 <form>
-    <div><label> Title: <input type="text" id="taskTitle" /> </label></div>
-    <div><label> Description : <input type="text" id="taskDescription"/> </label></div>
+    <div><label> Title: <input type="text" id="taskTitle" required/> </label></div>
+    <div><label> Description : <input type="text" id="taskDescription" required/> </label></div>
     <form>
         Категория
         <select class="category-select" id="taskCategoryId">
@@ -22,7 +22,9 @@
     <div>
         <label>Due Date: </label>
         <input type="date" id="taskDueDate" name="dueDate"
-               th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"/>
+               th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"
+               required
+        />
         <small>Срок выполнения</small>
     </div>
 
@@ -38,6 +40,12 @@
        const description = document.getElementById('taskDescription').value.trim()
        const categoryId = document.getElementById('taskCategoryId').value.trim()
        const dueDate = document.getElementById('taskDueDate').value.trim()
+
+       if(title=="" || description==""){
+            alert("заполните все данные")
+            return;
+       }
+
        fetch('/custom/tasks/add', {
            method: 'POST',
            headers: {
@@ -47,7 +55,7 @@
        })
        .then(response => {
            if (response.ok) {
-               alert("ok")
+               alert("задача добавлена")
            } else {
                throw new Error('Ошибка добавления');
            }

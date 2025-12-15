@@ -8,15 +8,16 @@
     <div><input type="submit" value="на главную"/></div>
 </form>
 <form>
-    <div><label> Title: <input type="text" th:value = "${task.title}" id="editTitle" /> </label></div>
-    <div><label> Description : <input type="text" th:value = "${task.description}" id="editDescription"/> </label></div>
+    <div><label> Title: <input type="text" th:value = "${task.title}" id="editTitle" required /> </label></div>
+    <div><label> Description : <input type="text" th:value = "${task.description}" id="editDescription" required/> </label></div>
 
         Категория
         <select class="category-select" id="editCategoryId">
             <option th:each="category : ${categories}"
                     th:value="${category.id}"
                     th:text="${category.title}"
-                    th:selected="${category.id} == ${task.category.id}">
+                    th:selected="${category.id} == ${task.category.id}"
+            >
             </option>
         </select>
 
@@ -32,7 +33,9 @@
     <div>
         <label>Due Date: </label>
         <input type="date" name="dueDate" id="editDate"
-               th:value="${date}"/>
+               th:value="${date}"
+               required
+        />
         <small>Срок выполнения</small>
     </div>
 
@@ -52,7 +55,10 @@
        const statusId = document.getElementById('editStatusId').value.trim()
        const dueDate = document.getElementById('editDate').value.trim()
 
-
+       if(title=="" || description==""){
+            alert("заполните все данные")
+            return;
+       }
        fetch('/custom/tasks/update', {
            method: 'PUT',
            headers: {
