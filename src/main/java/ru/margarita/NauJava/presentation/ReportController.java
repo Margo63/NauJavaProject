@@ -23,6 +23,9 @@ public class ReportController {
         this.reportService = reportService;
     }
 
+    /**
+     * добавление отчета
+     * */
     @PostMapping("/reports")
     public String createReport() {
         Long reportId = reportService.createReport();
@@ -30,6 +33,9 @@ public class ReportController {
         return "redirect:/reports/" + reportId;
     }
 
+    /**
+     * отображение отчета
+     * */
     @GetMapping("/reports/{id}")
     public String getReport(@PathVariable Long id, Model model) {
         Optional<Report> reportOpt = reportService.getReport(id);

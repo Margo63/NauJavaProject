@@ -6,9 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import ru.margarita.NauJava.domain.category.CategoryService;
 import ru.margarita.NauJava.domain.category.CategoryServiceImpl;
-import ru.margarita.NauJava.domain.status.StatusService;
 import ru.margarita.NauJava.domain.status.StatusServiceImpl;
 import ru.margarita.NauJava.domain.task.TaskServiceImpl;
 import ru.margarita.NauJava.entities.Category;
@@ -16,9 +14,15 @@ import ru.margarita.NauJava.entities.Status;
 import ru.margarita.NauJava.entities.Task;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * Класс контроллер для отображения задач
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-12-15
+ */
 @Controller
 @RequestMapping(value = "/custom/tasks/view", method = RequestMethod.GET)
 public class TaskControllerView {
@@ -32,6 +36,9 @@ public class TaskControllerView {
     @Autowired
     private TaskServiceImpl taskService;
 
+    /**
+     * страница создания задачи
+     * */
     @GetMapping("/taskCreate")
     String createTask(Model model){
         List<Status> statusList = statusService.getAllStatuses();
@@ -43,6 +50,9 @@ public class TaskControllerView {
         return "createTask";
     }
 
+    /**
+     * страница изменения задачи
+     * */
     @GetMapping("/taskEdit")
     String editTask(Model model, Long taskId){
 
@@ -61,6 +71,9 @@ public class TaskControllerView {
         return "editTask";
     }
 
+    /**
+     * страница отображения задачи
+     * */
     @GetMapping("/task")
     String getTask(Model model, Long taskId){
         Task task = taskService.findById(taskId);

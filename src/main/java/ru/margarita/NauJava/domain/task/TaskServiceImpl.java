@@ -94,7 +94,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean createTask(String title, String description, Long categoryId, Date dueDate, User user) {
+    public void createTask(String title, String description, Long categoryId, Date dueDate, User user) {
         Task task = new Task(description, title, user);
         Status status = statusRepository.findByCode(StatusCodes.PENDING);
         task.setStatus(status);
@@ -110,7 +110,6 @@ public class TaskServiceImpl implements TaskService {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         taskRepository.save(task);
         notificationRepository.save(new Notification("deadline of task "+task.getTitle()+"is "+ sdf.format(dueDate), sendDate, task));
-        return true;
     }
 
     @Override
@@ -119,10 +118,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
         notificationRepository.deleteByTaskId(id);
         taskRepository.deleteById(id);
-        return true;
     }
 
 

@@ -17,5 +17,8 @@ import ru.margarita.NauJava.entities.CategoryCode;
 @RepositoryRestResource(path = "categories")
 public interface CategoryRepository extends CrudRepository<Category, Long> {
 
+    /**
+     * поиск категории по коду
+     * */
     Category findByCode(CategoryCode code);
 }

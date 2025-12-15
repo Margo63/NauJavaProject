@@ -22,37 +22,62 @@ import java.util.List;
  */
 @RepositoryRestResource(path = "tasks")
 public interface TaskRepository extends CrudRepository<Task, Long> {
+
+    /**
+     * поиск задач по имени пользователя
+     * */
     @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE %:name%")
     List<Task> findTasksByUserName(String name);
 
+
+    /**
+     * поиск задач по имени пользователя и категории
+     * */
     @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.category.id = :categoryId")
     List<Task> findTasksByUserNameAndCategoryId(@Param("name") String name, @Param("categoryId") Long categoryId);
 
+    /**
+     * поиск задач по имени пользователя, статусу и категории
+     * */
     @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.category.id = :categoryId AND u.status.id = :statusId")
     List<Task> findTasksByUserNameAndCategoryIdAndStatusId(@Param("name") String name, @Param("categoryId") Long categoryId,
                                                            @Param("statusId") Long statusId);
 
+    /**
+     * поиск задач по имени пользователя и статусу
+     * */
     @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.status.id = :statusId")
     List<Task> findTasksByUserNameAndStatusId(@Param("name") String name, @Param("statusId") Long statusId);
 
+    /**
+     * обновление статуса задачи
+     * */
     @Modifying
     @Transactional
     @Query("UPDATE Task t SET t.status = :status  WHERE t.id = :id")
     void updateTaskStatus(@Param("id") Long id, @Param("status") Status status);
 
+    /**
+     * обновление категории задачи
+     * */
     @Modifying
     @Transactional
     @Query("UPDATE Task t SET t.category = :category  WHERE t.id = :id")
     void updateTaskCategory(@Param("id") Long id, @Param("category") Category category);
 
-    void deleteByUserId(Long id);
 
+    /**
+     * обновление задачи
+     * */
     @Modifying
     @Transactional
     @Query("UPDATE Task t SET  t.title = :title, t.description = :description, t.category = :category, t.status = :status, t.dueDate = :date WHERE t.id = :id")
     void updateTask(@Param("id") Long id, @Param("title") String title, @Param("description") String description,
                     @Param("category") Category category, @Param("status") Status status, @Param("date") Date date);
 
+    /**
+     * обновление таймера задачи
+     * */
     @Modifying
     @Transactional
     @Query("UPDATE Task t SET  t.timerValue = :timerValue WHERE t.id = :id")

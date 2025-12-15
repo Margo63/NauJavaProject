@@ -6,6 +6,13 @@ import ru.margarita.NauJava.repositories.UserDataRepository;
 
 import java.util.List;
 
+/**
+ * Реализация {@link UserDataService}
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-12-15
+ */
 @Service
 public class UserDataServiceImpl implements UserDataService{
 
@@ -16,9 +23,16 @@ public class UserDataServiceImpl implements UserDataService{
     }
 
     @Override
-    public boolean createUserData(String surname, String patronymic, String job) {
-        userDataRepository.save(new UserData(surname,patronymic,job));
-        return true;
+    public UserData createUserData(String surname, String patronymic, String job) {
+        UserData userData = new UserData(surname,patronymic,job);
+        userDataRepository.save(userData);
+        return userData;
+    }
+
+    @Override
+    public UserData createUserData(UserData userData) {
+        userDataRepository.save(userData);
+        return userData;
     }
 
     @Override
@@ -29,15 +43,13 @@ public class UserDataServiceImpl implements UserDataService{
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
         userDataRepository.deleteById(id);
-        return true;
     }
 
     @Override
-    public boolean updateUser(Long id, String surname, String patronymic, String job) {
+    public void updateUser(Long id, String surname, String patronymic, String job) {
         userDataRepository.updateUserData(id,surname,patronymic,job);
-        return true;
     }
 
     @Override

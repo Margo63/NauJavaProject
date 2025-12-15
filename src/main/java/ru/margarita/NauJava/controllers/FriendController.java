@@ -13,6 +13,13 @@ import ru.margarita.NauJava.entities.Friend;
 import ru.margarita.NauJava.entities.FriendStatus;
 import ru.margarita.NauJava.entities.User;
 
+/**
+ * Класс контроллер для взаимодействия с бд через репозиторий
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-10-27
+ */
 @RestController
 @RequestMapping("custom/friends")
 public class FriendController {
@@ -21,6 +28,9 @@ public class FriendController {
     @Autowired
     private FriendServiceImpl friendService;
 
+    /**
+    * метод для отправления приглашения пользователю по имени
+    * */
     @PostMapping("/add")
     public String addFriend(Model model, String friendName){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -32,6 +42,9 @@ public class FriendController {
         return "ok";
     }
 
+    /**
+     * метод для отлонения приглашения
+     * */
     @Transactional
     @PutMapping("/reject")
     public String rejectFriend(Model model, Long id){
@@ -39,6 +52,9 @@ public class FriendController {
         return "ok";
     }
 
+    /**
+     * метод для принятия приглашения
+     * */
     @Transactional
     @PutMapping("/accept")
     public String acceptFriend(Long id, Long userInviterId, Long userId){
@@ -54,6 +70,9 @@ public class FriendController {
         return "ok";
     }
 
+    /**
+     * метод для удаления отправленного приглашения
+     * */
     @Transactional
     @DeleteMapping("/delete")
     public String delete(Model model, Long id){
@@ -61,6 +80,9 @@ public class FriendController {
         return "ok";
     }
 
+    /**
+     * метод для удаления друга
+     * */
     @Transactional
     @DeleteMapping("/deleteFriend")
     public String deleteFriend(Model model, Long id, Long friendId){
