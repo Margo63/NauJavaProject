@@ -19,7 +19,7 @@ import ru.margarita.NauJava.entities.*;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/custom/friends", method = RequestMethod.GET)
+@RequestMapping(value = "/custom/friends/view", method = RequestMethod.GET)
 public class FriendsControllerView {
 
     @Autowired
@@ -46,50 +46,8 @@ public class FriendsControllerView {
         return "friends";
     }
 
-    @PostMapping("/add")
-    public String addFriend(Model model, String friendName){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByName(auth.getName());
-        User friend = userService.findUserByName(friendName);
-        if(friend!=null && user!=friend)
-            friendService.inviteFriend(user, friend);
 
-        return "redirect:/custom/friends/friendList";
-    }
-
-    @PostMapping("/reject")
-    public String rejectFriend(Model model, Long id){
-        friendService.updateStatus(id, FriendStatus.REJECT);
-        return "redirect:/custom/friends/friendList";
-    }
-
-    @PostMapping("/accept")
-    public String acceptFriend(Long id, Long userInviterId, Long userId){
-        User userInviter = userService.findUserById(userInviterId);
-        User user = userService.findUserById(userId);
-        if(userInviter!=null && user!=null){
-            Friend friend = friendService.createFriend(user, userInviter);
-
-            friendService.updateStatus(friend.getId(), FriendStatus.ACCEPT);
-            friendService.updateStatus(id, FriendStatus.ACCEPT);
-        }
-
-        return "redirect:/custom/friends/friendList";
-    }
-
-    @PostMapping("/delete")
-    public String delete(Model model, Long id){
-        friendService.deleteById(id);
-        return "redirect:/custom/friends/friendList";
-    }
-
-    @PostMapping("/deleteFriend")
-    public String deleteFriend(Model model, Long id, Long friendId){
-        System.out.println("in delete: "+id +" "+ friendId);
-        friendService.deleteFriendByUserIdAndFriendId(id,friendId);
-        return "redirect:/custom/friends/friendList";
-    }
-    @GetMapping("/view")
+    @GetMapping("/viewFriend")
     public String viewFriend(Model model, Long friendId){
         User user = userService.findUserById(friendId);
         model.addAttribute("name",user.getName());

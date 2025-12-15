@@ -23,13 +23,15 @@ public class TaskServiceImpl implements TaskService {
     private final UserDataRepository userDataRepository;
     private final StatusRepository statusRepository;
 
+    private final FriendRepository friendRepository;
     private final CategoryRepository categoryRepository;
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository, StatusRepository statusRepository, CategoryRepository categoryRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository, StatusRepository statusRepository, FriendRepository friendRepository, CategoryRepository categoryRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.userDataRepository = userDataRepository;
         this.statusRepository = statusRepository;
+        this.friendRepository = friendRepository;
         this.categoryRepository = categoryRepository;
     }
 
@@ -43,6 +45,7 @@ public class TaskServiceImpl implements TaskService {
         }
         User user = userRepository.findByName(name).getFirst();
         userDataRepository.deleteById(user.getId());
+        List<Friend> friend = friendRepository.findByName(name);
         // удалить пользователя
         userRepository.deleteByName(name);
     }
