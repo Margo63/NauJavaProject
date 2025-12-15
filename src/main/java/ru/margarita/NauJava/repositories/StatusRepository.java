@@ -1,8 +1,9 @@
-package ru.margarita.NauJava.data.repositories;
+package ru.margarita.NauJava.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.margarita.NauJava.entities.Status;
+import ru.margarita.NauJava.entities.StatusCodes;
 
 /**
  * Класс взаимодействия с таблицей статусов
@@ -13,4 +14,5 @@ import ru.margarita.NauJava.entities.Status;
  */
 @RepositoryRestResource(path = "statuses")
 public interface StatusRepository extends CrudRepository<Status, Long> {
+    Status findByCode(StatusCodes code);
 }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Edit </title>
+</head>
+<body>
+<form action="/custom/users/view/user" method="get">
+    <div><input type="submit" value="на главную"/></div>
+</form>
+<form>
+    <div><label> Title: <input type="text" th:value = "${task.title}" id="editTitle" /> </label></div>
+    <div><label> Description : <input type="text" th:value = "${task.description}" id="editDescription"/> </label></div>
+
+        Категория
+        <select class="category-select" id="editCategoryId">
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.title}"
+                    th:selected="${category.id} == ${task.category.id}">
+            </option>
+        </select>
+
+        Статус
+        <select class="status-select" id="editStatusId">
+            <option th:each="status : ${statuses}"
+                    th:value="${status.id}"
+                    th:text="${status.title}"
+                    th:selected="${status.id} == ${task.status.id}">
+            </option>
+        </select>
+
+    <div>
+        <label>Due Date: </label>
+        <input type="date" name="dueDate" id="editDate"
+               th:value="${date}"/>
+        <small>Срок выполнения</small>
+    </div>
+
+    <button type="button"
+            th:data-task-id="${task.id}"
+            onclick="updateTask(this)">
+        save
+    </button>
+</form>
+<script>
+    function updateTask(button) {
+
+       const taskId = button.dataset.taskId;
+       const title = document.getElementById('editTitle').value.trim();
+       const description = document.getElementById('editDescription').value.trim()
+       const categoryId = document.getElementById('editCategoryId').value.trim()
+       const statusId = document.getElementById('editStatusId').value.trim()
+       const dueDate = document.getElementById('editDate').value.trim()
+
+
+       fetch('/custom/tasks/update', {
+           method: 'PUT',
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded',
+           },
+           body: `id=${taskId}&title=${title}&description=${description}&statusId=${statusId}&categoryId=${categoryId}&dueDate=${dueDate}`
+       })
+       .then(response => {
+           if (response.ok) {
+
+           } else {
+               throw new Error('Ошибка изменения');
+           }
+       })
+
+   }
+</script>
+</body>
+</html>

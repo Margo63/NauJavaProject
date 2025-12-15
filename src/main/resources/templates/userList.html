@@ -15,11 +15,80 @@
     </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.id}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.password}"></td>
-        <td th:text="${user.admin}"></td>
+        <td>
+            <input type="text" name="name" th:id="'userName'+${user.id}"
+                   th:value="${user.name}"
+                   required/>
+        </td>
+        <td>
+            <input type="text" name="email" th:id="'userEmail'+${user.id}"
+                   th:value="${user.email}"
+                   required/>
+        </td>
+        <td>
+            <input type="password" name="password" th:id="'userPassword'+${user.id}"/>
+        </td>
+        <td>
+            <input type="checkbox" name="is_admin" th:id="'userIsAdmin'+${user.id}"
+                   th:checked="${user.admin}"/>
+        </td>
+        <td>
+            <button th:data-user-id="${user.id}"
+                    onclick="updateUser(this)">
+                save
+            </button>
+        </td>
+        <td>
+            <button th:data-user-name="${user.name}"
+                    onclick="deleteAcc(this)">
+                delete
+            </button>
+        </td>
     </tr>
 </table>
+
+<script>
+    function deleteAcc(button){
+        const name = button.dataset.userName;
+        fetch('/custom/users/delete', {
+               method: 'DELETE',
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               body: `name=${name}`
+        })
+        .then(response => {
+           if (response.ok) {
+               window.location.reload()
+           } else {
+               throw new Error('Ошибка удаления');
+           }
+        })
+    }
+    function updateUser(button){
+        const id = button.dataset.userId;
+        const name = document.getElementById('userName'+id).value.trim();
+        const email = document.getElementById('userEmail'+id).value.trim();
+        const password = document.getElementById('userPassword'+id).value;
+        const isAdmin = document.getElementById('userIsAdmin'+id).checked;
+
+        fetch('/custom/users/updateMainInfo', {
+               method: 'PUT',
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               body: `id=${id}&name=${name}&email=${email}&password=${password}&isAdmin=${isAdmin}`
+        })
+        .then(response => {
+           if (response.ok) {
+
+                window.location.reload();
+           } else {
+               alert("error")
+               throw new Error('Ошибка сохранения');
+           }
+        })
+    }
+</script>
 </body>
 </html>

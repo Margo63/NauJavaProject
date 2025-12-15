@@ -21,7 +21,7 @@ public class Status
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private int code;
+    private StatusCodes code;
 
     public Long getId()
     {
@@ -48,11 +48,11 @@ public class Status
         this.description = description;
     }
 
-    public int getCode() {
+    public StatusCodes getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(StatusCodes code) {
         this.code = code;
     }
 }

@@ -20,6 +20,9 @@ public class Task
     private Long id;
     @Column(nullable = false, unique = true)
     private String title;
+
+    @Column(nullable = false)
+    private int timerValue;
     @Column
     private String description;
     @Column
@@ -28,10 +31,22 @@ public class Task
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private Category category;
+
+    @ManyToOne
+    private Status status;
+
     public Task() {
     }
 
     public Task(String title, User user) {
+        this.title = title;
+        this.user = user;
+    }
+
+    public Task(String description, String title, User user) {
+        this.description = description;
         this.title = title;
         this.user = user;
     }
@@ -75,6 +90,30 @@ public class Task
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getTimerValue() {
+        return timerValue;
+    }
+
+    public void setTimerValue(int timerValue) {
+        this.timerValue = timerValue;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
 

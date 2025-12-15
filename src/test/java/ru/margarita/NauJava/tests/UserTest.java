@@ -8,27 +8,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.margarita.NauJava.data.criteria_repo.TaskRepositoryCustom;
-import ru.margarita.NauJava.data.criteria_repo.UserRepositoryCustom;
-import ru.margarita.NauJava.data.repositories.TaskRepository;
-import ru.margarita.NauJava.data.repositories.UserRepository;
-import ru.margarita.NauJava.domain.TaskService;
+import ru.margarita.NauJava.repositories.TaskRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
+import ru.margarita.NauJava.domain.task.TaskService;
 import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 
 @SpringBootTest
 class UserTest {
     private final UserRepository userRepository;
-    private final UserRepositoryCustom userRepositoryCustom;
-    private final TaskRepositoryCustom taskRepositoryCustom;
     public final TaskRepository taskRepository;
     public final TaskService taskService;
 
     @Autowired
-    UserTest(UserRepository userRepository, UserRepositoryCustom userRepositoryCustom, TaskRepositoryCustom taskRepositoryCustom, TaskRepository taskRepository, TaskService taskService) {
+    UserTest(UserRepository userRepository, TaskRepository taskRepository, TaskService taskService) {
         this.userRepository = userRepository;
-        this.userRepositoryCustom = userRepositoryCustom;
-        this.taskRepositoryCustom = taskRepositoryCustom;
         this.taskRepository = taskRepository;
         this.taskService = taskService;
     }
@@ -123,35 +117,6 @@ class UserTest {
         Assertions.assertTrue(foundTask.isEmpty());
     }
 
-    /**
-     * Тестирование функций реализованных с помощью CriteriaApi
-     */
-    @Test
-    void testCriteria() {
-        //создание пользователя и задачи
-        User user = createUserRandomName();
-        Task task = createTask(user, "taskCriteria");
-
-        //поиск с существущими параметрами
-        User foundUserName = userRepositoryCustom.findByName(user.getName()).getFirst();
-        User foundUserEmail = userRepositoryCustom.findByEmailAndPassword(user.getEmail(), user.getPassword()).getFirst();
-        Task foundTask = taskRepositoryCustom.findTasksByUserName(user.getName()).getFirst();
-
-        //поиск по несуществующем параметрам
-        List<User> foundUserNameNeg = userRepositoryCustom.findByName("");
-        List<User> foundUserEmailNeg = userRepositoryCustom.findByEmailAndPassword(user.getEmail(), "");
-        List<Task> foundTaskNeg = taskRepositoryCustom.findTasksByUserName("NOT EXIST");
-
-        //положительная проверка
-        Assertions.assertEquals(user.getName(), foundUserName.getName());
-        Assertions.assertEquals(user.getEmail(), foundUserEmail.getEmail());
-        Assertions.assertEquals(task.getTitle(), foundTask.getTitle());
-
-        //отрицательная проверка
-        Assertions.assertTrue(foundUserNameNeg.isEmpty());
-        Assertions.assertTrue(foundUserEmailNeg.isEmpty());
-        Assertions.assertTrue(foundTaskNeg.isEmpty());
-    }
 
     /**
      * Тестирование удаления задач при удалении пользователя
@@ -193,6 +158,14 @@ class UserTest {
         Assertions.assertFalse(foundTaskD2.isEmpty());
     }
 
+    @Test
+    void testUpdateUser(){
+        User user = createUserWithEmailAndPassword("test@mail.com", "test");
+        userRepository.updateUserEmail(user.getId(),"newemail");
+        User updatedUser = userRepository.findByName(user.getName()).getFirst();
+        Assertions.assertEquals("newemail", updatedUser.getEmail());
+    }
+
     private User createUserRandomName() {
         // генерация имени пользователя
         String userName = UUID.randomUUID().toString();
@@ -216,4 +189,6 @@ class UserTest {
         taskRepository.save(task1);
         return task1;
     }
+
+
 }

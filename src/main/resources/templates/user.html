@@ -5,14 +5,229 @@
 </head>
 <body>
 <h1><span th:text="${name}"></span></h1>
+<h2>Notifications</h2>
+<table border="1">
+    <tr>
+        <th>Text</th>
+
+    </tr>
+    <tr th:each="notification : ${notifications}">
+        <td th:text="${notification.text}"></td>
+    </tr>
+</table>
+<form>
+    <div>
+        <label>Почта пользователя:</label>
+        <input type="text" name="email" id="userEmail"
+               th:value="${email}"
+               required
+               placeholder="Введите почту"/>
+    </div>
+    <div>
+        <label>Фамилия пользователя:</label>
+        <input type="text" name="surname" id="userSurname"
+               th:value="${surname}"
+               placeholder="Введите фамилию"/>
+    </div>
+    <div>
+        <label>Отчество пользователя:</label>
+        <input type="text" name="patronymic" id="userPatronymic"
+               th:value="${patronymic}"
+               placeholder="Введите отчество"/>
+    </div>
+    <div>
+        <label>Работа пользователя:</label>
+        <input type="text" name="job" id="userJob"
+               th:value="${job}"
+               placeholder="Введите место работы"/>
+    </div>
+    <button th:data-user-name="${name}" onclick="updateUser(this)">save</button>
+</form>
+<br>
+<button th:data-user-name="${name}" onclick="deleteAcc(this)">delete account</button>
+
 <form th:action="@{/logout}" method="post">
     <div><input type="submit" value="logout" id = "logout"/></div>
 </form>
-<form th:action="@{/custom/users/view/list}" method="get">
-    <div><input type="submit" value="users list"/></div>
+<form th:action="@{/custom/tasks/view/taskCreate}" method="get">
+    <div><input type="submit" value="add task"/></div>
 </form>
-<form th:action="@{/reports}" method="post">
-    <div><input type="submit" value="report"/></div>
+<form id="select" th:action="@{/custom/users/view/filterCategoryAndStatus}" method="get" >
+    <select name="selectFilterCategory">
+        <option th:value = "${-1}">None</option>>
+        <option th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.title}"
+                th:selected="${category.id} == ${selectedCategoryId}"
+        >
+        </option>
+    </select>
+    <select name="selectFilterStatus">
+        <option th:value = "${-1}">None</option>>
+        <option th:each="status : ${statuses}"
+                th:value="${status.id}"
+                th:text="${status.title}"
+                th:selected="${status.id} == ${selectedStatusId}"
+        >
+        </option>
+    </select>
+    <div><input type="submit" value="filter"/></div>
 </form>
+
+<table border="1">
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+
+    </tr>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.description}"></td>
+        <td>
+            <form id="selectForm">
+                <select class="status-select" th:data-task-id="${task.id}" onchange="updateStatus(this)">
+                    <option th:each="status : ${statuses}"
+                            th:value="${status.id}"
+                            th:text="${status.title}"
+                            th:selected="${task.status != null and status.id == task.status.id}">
+                    </option>
+                </select>
+            </form>
+        </td>
+        <td>
+            <form id="selectCategory">
+                <select class="category-select" th:data-task-id="${task.id}" onchange="updateCategory(this)">
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.title}"
+                            th:selected="${task.category != null and category.id == task.category.id}">
+                    </option>
+                </select>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/custom/tasks/view/task}" method="get">
+                <input type="hidden" name="taskId" th:value="${task.id}"/>
+                <div><input type="submit" value="view"/></div>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/custom/tasks/view/taskEdit}" method="get">
+                <input type="hidden" name="taskId" th:value="${task.id}"/>
+                <div><input type="submit" value="edit"/></div>
+            </form>
+        </td>
+        <td>
+            <button class="delete-btn"
+                    th:data-task-id="${task.id}"
+                    onclick="deleteTask(this)">
+                Удалить
+            </button>
+        </td>
+
+    </tr>
+</table>
+<form action="/custom/friends/view/friendList" method="get">
+    <div><input type="submit" value="friends list"/></div>
+</form>
+
+<script>
+    function deleteAcc(button){
+        const name = button.dataset.userName;
+        fetch('/custom/users/delete', {
+               method: 'DELETE',
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               body: `name=${name}`
+        })
+        .then(response => {
+           if (response.ok) {
+               window.location.replace("/login")
+           } else {
+               throw new Error('Ошибка удаления');
+           }
+        })
+    }
+    function updateUser(button){
+        const name = button.dataset.userName;
+        const email = document.getElementById('userEmail').value.trim();
+        const surname = document.getElementById('userSurname').value.trim();
+        const patronymic = document.getElementById('userPatronymic').value.trim();
+        const job = document.getElementById('userJob').value.trim();
+
+        fetch('/custom/users/update', {
+               method: 'PUT',
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               body: `name=${name}&email=${email}&surname=${surname}&patronymic=${patronymic}&job=${job}`
+        })
+        .then(response => {
+           if (response.ok) {
+
+                window.location.reload();
+           } else {
+               alert("error")
+               throw new Error('Ошибка сохранения');
+           }
+        })
+    }
+    function updateStatus(select) {
+        const taskId = select.dataset.taskId;
+        const statusId = select.value;
+
+        fetch('/custom/tasks/selectStatus', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `taskId=${taskId}&newStatusId=${statusId}`
+        })
+        .catch(err => {
+            alert('Ошибка обновления!');
+        });
+    }
+
+    function updateCategory(select) {
+        const taskId = select.dataset.taskId;
+        const categoryId = select.value;
+
+        fetch('/custom/tasks/selectCategory', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `taskId=${taskId}&newCategoryId=${categoryId}`
+        })
+        .catch(err => {
+            alert('Ошибка обновления!');
+        });
+    }
+
+    function deleteTask(button) {
+        const taskId = button.dataset.taskId;
+
+        if (!confirm('Удалить задачу?')) return;
+
+        fetch('/custom/tasks/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${taskId}`
+        })
+        .then(response => {
+            if (response.ok) {
+                button.closest('tr').style.display = 'none';
+                button.textContent = 'Удалено';
+                button.disabled = true;
+            } else {
+                throw new Error('Ошибка удаления');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Не удалось удалить задачу');
+        });
+    }
+</script>
+
 </body>
 </html>

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.margarita.NauJava.data.repositories.UserRepository;
+import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.User;
 
 /**
