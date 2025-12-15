@@ -6,10 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.margarita.NauJava.domain.UserDetailServiceImpl;
+
+import java.util.Collection;
 
 /**
  * Класс конфигурации SpringSecurity
@@ -42,7 +45,25 @@ public class SpringSecurityConfig
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/custom/users/view/user", true)
+                        .successHandler((request, response, authentication) -> {
+                            // роли пользователя
+                            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+                            String redirectUrl = "/custom/users/view/user"; // значение по умолчанию
+
+                            // Проверка роли
+                            boolean isAdmin = authorities.stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                            boolean isUser = authorities.stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_USER"));
+
+                            if (isAdmin) {
+                                redirectUrl = "/admin/view/mainPage";
+                            }
+
+                            // Редирект
+                            response.sendRedirect(redirectUrl);
+                        })
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll)

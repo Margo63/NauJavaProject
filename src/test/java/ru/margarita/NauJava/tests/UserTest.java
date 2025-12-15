@@ -161,10 +161,9 @@ class UserTest {
     @Test
     void testUpdateUser(){
         User user = createUserWithEmailAndPassword("test@mail.com", "test");
-        userRepository.updateUserEmailAndPassword(user.getId(),"newemail","newpassword");
+        userRepository.updateUserEmail(user.getId(),"newemail");
         User updatedUser = userRepository.findByName(user.getName()).getFirst();
         Assertions.assertEquals("newemail", updatedUser.getEmail());
-        Assertions.assertEquals("newpassword", updatedUser.getPassword());
     }
 
     private User createUserRandomName() {

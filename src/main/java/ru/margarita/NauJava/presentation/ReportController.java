@@ -1,4 +1,4 @@
-package ru.margarita.NauJava.controllers;
+package ru.margarita.NauJava.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -5,48 +5,39 @@
 </head>
 <body>
 <h1><span th:text="${name}"></span></h1>
-<form action="/custom/users/view/update" method="post">
-    <input type="hidden" name="name" th:value="${name}"/>
+<form>
     <div>
         <label>Почта пользователя:</label>
-        <input type="text" name="email"
+        <input type="text" name="email" id="userEmail"
                th:value="${email}"
                required
                placeholder="Введите почту"/>
     </div>
     <div>
         <label>Фамилия пользователя:</label>
-        <input type="text" name="surname"
+        <input type="text" name="surname" id="userSurname"
                th:value="${surname}"
                placeholder="Введите фамилию"/>
     </div>
     <div>
         <label>Отчество пользователя:</label>
-        <input type="text" name="patronymic"
+        <input type="text" name="patronymic" id="userPatronymic"
                th:value="${patronymic}"
                placeholder="Введите отчество"/>
     </div>
     <div>
         <label>Работа пользователя:</label>
-        <input type="text" name="job"
+        <input type="text" name="job" id="userJob"
                th:value="${job}"
                placeholder="Введите место работы"/>
     </div>
-    <div><input type="submit" value="save"/></div>
+    <button th:data-user-name="${name}" onclick="updateUser(this)">save</button>
 </form>
 <br>
-<form action="/custom/users/view/delete" method="post">
-    <input type="hidden" name="name" th:value="${name}"/>
-    <div><input type="submit" value="delete account"/></div>
-</form>
+<button th:data-user-name="${name}" onclick="deleteAcc(this)">delete account</button>
+
 <form th:action="@{/logout}" method="post">
     <div><input type="submit" value="logout" id = "logout"/></div>
-</form>
-<form th:action="@{/custom/users/view/list}" method="get">
-    <div><input type="submit" value="users list"/></div>
-</form>
-<form th:action="@{/reports}" method="post">
-    <div><input type="submit" value="report"/></div>
 </form>
 <form th:action="@{/custom/tasks/view/taskCreate}" method="get">
     <div><input type="submit" value="add task"/></div>
@@ -131,6 +122,47 @@
 </form>
 
 <script>
+    function deleteAcc(button){
+        const name = button.dataset.userName;
+        fetch('/custom/users/delete', {
+               method: 'DELETE',
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               body: `name=${name}`
+        })
+        .then(response => {
+           if (response.ok) {
+               window.location.replace("/login")
+           } else {
+               throw new Error('Ошибка удаления');
+           }
+        })
+    }
+    function updateUser(button){
+        const name = button.dataset.userName;
+        const email = document.getElementById('userEmail').value.trim();
+        const surname = document.getElementById('userSurname').value.trim();
+        const patronymic = document.getElementById('userPatronymic').value.trim();
+        const job = document.getElementById('userJob').value.trim();
+
+        fetch('/custom/users/update', {
+               method: 'PUT',
+               headers: {
+                   'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               body: `name=${name}&email=${email}&surname=${surname}&patronymic=${patronymic}&job=${job}`
+        })
+        .then(response => {
+           if (response.ok) {
+
+                window.location.reload();
+           } else {
+               alert("error")
+               throw new Error('Ошибка сохранения');
+           }
+        })
+    }
     function updateStatus(select) {
         const taskId = select.dataset.taskId;
         const statusId = select.value;

@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean createUser(Long id, String name, String email, String password) {
+    public boolean createUser(String name, String email, String password) {
         User user = new User(name, email, password);
         userRepository.save(user);
         return true;
@@ -53,6 +53,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<User> getAllUsers() {
         return (List<User>) userRepository.findAll();
+    }
+
+    @Override
+    public List<User> findByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
 }

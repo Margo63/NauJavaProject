@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    boolean createUser(Long id, String name, String email, String password);
+    boolean createUser(String name, String email, String password);
     User findUserById(Long id);
     User findUserByName(String name);
     boolean deleteById(Long id);
@@ -16,4 +16,6 @@ public interface UserService {
     boolean updateUserEmail(Long id, String newEmail);
 
     List<User> getAllUsers();
+
+    List<User> findByEmailAndPassword(String email, String password);
 }

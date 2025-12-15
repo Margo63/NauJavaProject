@@ -43,13 +43,6 @@ public class UserControllerView {
     private CategoryServiceImpl categoryService;
 
 
-    @GetMapping("/list")
-    public String userListView(Model model) {
-        Iterable<User> products = userService.getAllUsers();
-        model.addAttribute("users", products);
-        return "userList";
-    }
-
     @GetMapping("/user")
     public String getUserInfo(Model model, @RequestParam(name = "categoryId", required = false) Long categoryId,
                               @RequestParam(name = "statusId", required = false) Long statusId) {
@@ -95,25 +88,6 @@ public class UserControllerView {
         return "redirect:/custom/users/view/user?categoryId=" + categoryId+"&statusId="+statusId;
     }
 
-    @Transactional
-    @PostMapping("/update")
-    public String update(Model model, String name, String email, String surname, String patronymic, String job) {
-        User user = userService.findUserByName(name);
-        userService.updateUserEmail(user.getId(), email);
-
-        userDataService.updateUser(user.getId(), surname, patronymic, job);
-        saveData(model,
-                userService.findUserById(user.getId()),
-                userDataService.findUserDataById(user.getId()));
-        return "redirect:/custom/users/view/user";
-    }
-
-    @Transactional
-    @PostMapping("/delete")
-    public String delete(@RequestParam String name) {
-        taskService.deleteUserByName(name);
-        return "redirect:/login";
-    }
 
     private void saveData(Model model, User user, UserData data) {
         model.addAttribute("name", user.getName());
