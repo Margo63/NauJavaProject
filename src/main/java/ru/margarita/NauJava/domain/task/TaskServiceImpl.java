@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.margarita.NauJava.entities.*;
 import ru.margarita.NauJava.repositories.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,14 +25,17 @@ public class TaskServiceImpl implements TaskService {
     private final UserDataRepository userDataRepository;
     private final StatusRepository statusRepository;
 
+    private final NotificationRepository notificationRepository;
+
     private final FriendRepository friendRepository;
     private final CategoryRepository categoryRepository;
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository, StatusRepository statusRepository, FriendRepository friendRepository, CategoryRepository categoryRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository, UserDataRepository userDataRepository, StatusRepository statusRepository, NotificationRepository notificationRepository, FriendRepository friendRepository, CategoryRepository categoryRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.userDataRepository = userDataRepository;
         this.statusRepository = statusRepository;
+        this.notificationRepository = notificationRepository;
         this.friendRepository = friendRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -41,6 +46,7 @@ public class TaskServiceImpl implements TaskService {
         // удалить все задачи связанные с пользователем
         List<Task> tasks = taskRepository.findTasksByUserName(name);
         for (Task task : tasks) {
+            notificationRepository.deleteByTaskId(task.getId());
             taskRepository.delete(task);
         }
         User user = userRepository.findByName(name).getFirst();
@@ -96,7 +102,14 @@ public class TaskServiceImpl implements TaskService {
         task.setCategory(category);
         task.setDueDate(dueDate);
         task.setTimerValue(30);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dueDate);
+        cal.add(Calendar.DATE, -1);
+        Date sendDate = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         taskRepository.save(task);
+        notificationRepository.save(new Notification("deadline of task "+task.getTitle()+"is "+ sdf.format(dueDate), sendDate, task));
         return true;
     }
 
@@ -107,6 +120,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public boolean deleteById(Long id) {
+        notificationRepository.deleteByTaskId(id);
         taskRepository.deleteById(id);
         return true;
     }

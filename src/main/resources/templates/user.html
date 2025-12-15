@@ -5,6 +5,16 @@
 </head>
 <body>
 <h1><span th:text="${name}"></span></h1>
+<h2>Notifications</h2>
+<table border="1">
+    <tr>
+        <th>Text</th>
+
+    </tr>
+    <tr th:each="notification : ${notifications}">
+        <td th:text="${notification.text}"></td>
+    </tr>
+</table>
 <form>
     <div>
         <label>Почта пользователя:</label>

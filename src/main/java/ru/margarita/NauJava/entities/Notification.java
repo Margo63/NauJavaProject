@@ -20,15 +20,28 @@ public class Notification {
     private String text;
     @Column(nullable = false)
     private Date sendTime;
-    @Column(nullable = false)
-    private String type;
+    @ManyToOne
+    private Task task;
+
+    public Notification(String text, Date sendTime, Task task) {
+        this.text = text;
+        this.sendTime = sendTime;
+        this.task = task;
+    }
+
+    public Notification() {
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getText() {
@@ -45,13 +58,5 @@ public class Notification {
 
     public void setSendTime(Date sendTime) {
         this.sendTime = sendTime;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }

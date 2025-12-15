@@ -1,6 +1,5 @@
 package ru.margarita.NauJava.presentation;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,13 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.margarita.NauJava.domain.category.CategoryServiceImpl;
-import ru.margarita.NauJava.domain.status.StatusService;
+import ru.margarita.NauJava.domain.notification.NotificationServiceImpl;
 import ru.margarita.NauJava.domain.status.StatusServiceImpl;
 import ru.margarita.NauJava.domain.task.TaskServiceImpl;
 import ru.margarita.NauJava.domain.userData.UserDataServiceImpl;
 import ru.margarita.NauJava.domain.user.UserServiceImpl;
 import ru.margarita.NauJava.entities.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +43,9 @@ public class UserControllerView {
     @Autowired
     private CategoryServiceImpl categoryService;
 
+    @Autowired
+    private NotificationServiceImpl notificationService;
+
 
     @GetMapping("/user")
     public String getUserInfo(Model model, @RequestParam(name = "categoryId", required = false) Long categoryId,
@@ -62,6 +66,15 @@ public class UserControllerView {
         } else {
             tasks = taskService.findTasksByUserName(auth.getName());
         }
+
+        List<Notification> notifications = new ArrayList<>();
+        for (Task task: tasks){
+            notifications.addAll(notificationService.findByTaskId(task.getId()));
+        }
+        Date now = new Date();
+        model.addAttribute("notifications", notifications.stream().filter(
+                notification -> notification.getSendTime().before(now) ||
+                notification.getSendTime().equals(now)).toList());
 
         model.addAttribute("tasks", tasks);
         model.addAttribute("selectedCategoryId", categoryId);
