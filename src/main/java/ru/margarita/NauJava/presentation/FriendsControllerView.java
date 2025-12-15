@@ -18,6 +18,13 @@ import ru.margarita.NauJava.entities.*;
 
 import java.util.List;
 
+/**
+ * Класс контроллер для отображени друзей
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-12-15
+ */
 @Controller
 @RequestMapping(value = "/custom/friends/view", method = RequestMethod.GET)
 public class FriendsControllerView {
@@ -31,6 +38,9 @@ public class FriendsControllerView {
     @Autowired
     private UserDataServiceImpl userDataService;
 
+    /**
+     * отображения всех друзей
+     * */
     @GetMapping("/friendList")
     public String getFriends(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -47,6 +57,9 @@ public class FriendsControllerView {
     }
 
 
+    /**
+     * отображения одного друга
+     * */
     @GetMapping("/viewFriend")
     public String viewFriend(Model model, Long friendId){
         User user = userService.findUserById(friendId);

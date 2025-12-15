@@ -22,12 +22,22 @@ public interface UserRepository extends CrudRepository<User, Long>
     List<User> findByName(String name);
     List<User> findByEmailAndPassword(String email, String password);
 
+    /**
+     * обновление почты пользователя
+     * */
     @Modifying()
     @Transactional
     @Query("UPDATE User u SET u.email = :email WHERE u.id = :id")
     void updateUserEmail(@Param("id") Long id,@Param("email") String email);
+
+    /**
+     * удаление пользователя по имени
+     * */
     void deleteByName(String name);
 
+    /**
+     * обновление важной информации о пользователе
+     * */
     @Modifying()
     @Transactional
     @Query("UPDATE User u SET u.name = :name,u.email = :email, u.password = :password,u.isAdmin = :isAdmin WHERE u.id = :id")

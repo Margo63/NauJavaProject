@@ -84,7 +84,16 @@ public class TaskServiceImpl implements TaskService {
     public void updateTask(Long id, String title, String description, Long categoryId, Long statusId, Date date) {
         Status status = statusRepository.findById(statusId).get();
         Category category = categoryRepository.findById(categoryId).get();
+        notificationRepository.deleteByTaskId(id);
         taskRepository.updateTask(id, title, description, category, status, date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -1);
+        Date sendDate = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        notificationRepository.save(new Notification("deadline of task "+title+"is "+ sdf.format(date),
+                sendDate,  taskRepository.findById(id).get()));
     }
 
     @Override
@@ -94,7 +103,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean createTask(String title, String description, Long categoryId, Date dueDate, User user) {
+    public void createTask(String title, String description, Long categoryId, Date dueDate, User user) {
         Task task = new Task(description, title, user);
         Status status = statusRepository.findByCode(StatusCodes.PENDING);
         task.setStatus(status);
@@ -110,7 +119,6 @@ public class TaskServiceImpl implements TaskService {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         taskRepository.save(task);
         notificationRepository.save(new Notification("deadline of task "+task.getTitle()+"is "+ sdf.format(dueDate), sendDate, task));
-        return true;
     }
 
     @Override
@@ -119,10 +127,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
         notificationRepository.deleteByTaskId(id);
         taskRepository.deleteById(id);
-        return true;
     }
 
 

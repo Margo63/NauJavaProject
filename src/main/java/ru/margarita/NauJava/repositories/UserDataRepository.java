@@ -20,11 +20,17 @@ import java.util.Optional;
 @RepositoryRestResource(path = "users_data")
 public interface UserDataRepository extends CrudRepository<UserData, Long> {
 
+    /**
+     * обновление информации о пользовательской информации
+     * */
     @Modifying()
     @Transactional
     @Query("UPDATE UserData u SET u.surname = :surname, u.patronymic = :patronymic, u.job = :job  WHERE u.id = :id")
     void updateUserData(@Param("id") Long id, @Param("surname") String surname,
                                     @Param("patronymic") String patronymic, @Param("job") String job);
+    /**
+     * удаление по id
+     * */
     void deleteById(Long id);
 
 }

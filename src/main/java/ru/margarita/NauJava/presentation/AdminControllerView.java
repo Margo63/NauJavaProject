@@ -11,6 +11,13 @@ import ru.margarita.NauJava.entities.User;
 
 import java.util.List;
 
+/**
+ * Класс контроллер для администратора
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-12-15
+ */
 @Controller
 @RequestMapping("/admin/view")
 public class AdminControllerView {
@@ -19,10 +26,18 @@ public class AdminControllerView {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserServiceImpl userService;
+
+    /**
+     * отображение главной страницы для администратора
+     * */
     @GetMapping("/mainPage")
     String getAdminPage(){
         return "admin";
     }
+
+    /**
+     * отображение списка всех пользователей
+     * */
     @GetMapping("/list")
     public String userListView(Model model) {
         List<User> user = userService.getAllUsers();

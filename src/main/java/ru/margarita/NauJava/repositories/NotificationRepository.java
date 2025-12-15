@@ -20,11 +20,17 @@ import java.util.List;
 @RepositoryRestResource(path = "notifications")
 public interface NotificationRepository extends CrudRepository<Notification, Long> {
 
+    /**
+     * удаление напоминания по id задачи
+     * */
     @Modifying()
     @Transactional
     @Query("DELETE FROM Notification n WHERE n.task.id = :id")
     void deleteByTaskId(@Param("id") Long id);
 
+    /**
+     * поиск напоминания по id задачи
+     * */
     @Query("SELECT n FROM Notification n WHERE n.task.id = :id")
     List<Notification> findByTaskId(@Param("id")Long id);
 }

@@ -47,6 +47,9 @@ public class UserControllerView {
     private NotificationServiceImpl notificationService;
 
 
+    /**
+     * страница пользователя
+     * */
     @GetMapping("/user")
     public String getUserInfo(Model model, @RequestParam(name = "categoryId", required = false) Long categoryId,
                               @RequestParam(name = "statusId", required = false) Long statusId) {
@@ -88,6 +91,9 @@ public class UserControllerView {
         return "user";
     }
 
+    /**
+     * фильтрация по категории и статусу
+     * */
     @GetMapping("/filterCategoryAndStatus")
     public String filterCategoryAndStatus(@RequestParam(name = "selectFilterCategory", required = false) Long categoryId,
                                           @RequestParam(name = "selectFilterStatus", required = false) Long statusId) {
@@ -102,6 +108,9 @@ public class UserControllerView {
     }
 
 
+    /**
+     * сохранение информации
+     * */
     private void saveData(Model model, User user, UserData data) {
         model.addAttribute("name", user.getName());
         model.addAttribute("email", user.getEmail());

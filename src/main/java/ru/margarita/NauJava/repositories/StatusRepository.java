@@ -14,5 +14,9 @@ import ru.margarita.NauJava.entities.StatusCodes;
  */
 @RepositoryRestResource(path = "statuses")
 public interface StatusRepository extends CrudRepository<Status, Long> {
+
+    /**
+     * поиск статуса по коду
+     * */
     Status findByCode(StatusCodes code);
 }

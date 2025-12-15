@@ -2,14 +2,21 @@ package ru.margarita.NauJava.domain.friend;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.margarita.NauJava.domain.category.CategoryService;
 import ru.margarita.NauJava.entities.Friend;
 import ru.margarita.NauJava.entities.FriendStatus;
-import ru.margarita.NauJava.entities.Task;
 import ru.margarita.NauJava.entities.User;
 import ru.margarita.NauJava.repositories.FriendRepository;
 
 import java.util.List;
 
+/**
+ * Реализация {@link FriendService}
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-12-15
+ */
 @Service
 public class FriendServiceImpl implements FriendService {
 
@@ -53,26 +60,19 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
         friendRepository.deleteById(id);
-        return true;
-    }
-
-    @Override
-    public boolean deleteByName(String name) {
-        return false;
     }
 
     @Transactional
     @Override
-    public boolean updateStatus(Long id, FriendStatus status) {
+    public void updateStatus(Long id, FriendStatus status) {
         friendRepository.updateStatus(id, status);
-        return true;
     }
 
     @Override
     public List<Friend> getAll() {
-        return List.of();
+        return (List<Friend>) friendRepository.findAll();
     }
 
 

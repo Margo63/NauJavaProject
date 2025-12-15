@@ -8,6 +8,13 @@ import ru.margarita.NauJava.repositories.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Реализация {@link UserService}
+ *
+ * @author Margarita
+ * @version 1.0
+ * @since 2025-12-15
+ */
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -18,10 +25,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean createUser(String name, String email, String password) {
+    public User createUser(String name, String email, String password) {
         User user = new User(name, email, password);
         userRepository.save(user);
-        return true;
+        return user;
     }
 
     @Override
@@ -38,16 +45,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
-        return true;
     }
 
     @Transactional
     @Override
-    public boolean updateUserEmail(Long id, String newEmail) {
+    public void updateUserEmail(Long id, String newEmail) {
         userRepository.updateUserEmail(id, newEmail);
-        return true;
     }
 
     @Override
