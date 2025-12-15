@@ -84,7 +84,16 @@ public class TaskServiceImpl implements TaskService {
     public void updateTask(Long id, String title, String description, Long categoryId, Long statusId, Date date) {
         Status status = statusRepository.findById(statusId).get();
         Category category = categoryRepository.findById(categoryId).get();
+        notificationRepository.deleteByTaskId(id);
         taskRepository.updateTask(id, title, description, category, status, date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -1);
+        Date sendDate = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        notificationRepository.save(new Notification("deadline of task "+title+"is "+ sdf.format(date),
+                sendDate,  taskRepository.findById(id).get()));
     }
 
     @Override
