@@ -60,4 +60,10 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByEmailAndPassword(email, password);
     }
 
+    @Transactional
+    @Override
+    public void updateMainInfo(Long id, String name, String email, String password, Boolean isAdmin) {
+        userRepository.updateMainInfo(id, name, email, password, isAdmin);
+    }
+
 }

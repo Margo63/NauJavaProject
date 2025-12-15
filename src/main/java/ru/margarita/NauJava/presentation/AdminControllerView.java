@@ -1,6 +1,7 @@
 package ru.margarita.NauJava.presentation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.margarita.NauJava.domain.user.UserServiceImpl;
 import ru.margarita.NauJava.entities.User;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin/view")
 public class AdminControllerView {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserServiceImpl userService;
     @GetMapping("/mainPage")
@@ -19,8 +25,9 @@ public class AdminControllerView {
     }
     @GetMapping("/list")
     public String userListView(Model model) {
-        Iterable<User> products = userService.getAllUsers();
-        model.addAttribute("users", products);
+        List<User> user = userService.getAllUsers();
+        System.out.println(user.getFirst().getAdmin());
+        model.addAttribute("users", user);
         return "userList";
     }
 }

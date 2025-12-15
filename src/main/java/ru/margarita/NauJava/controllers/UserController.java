@@ -2,6 +2,7 @@ package ru.margarita.NauJava.controllers;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.margarita.NauJava.domain.task.TaskService;
@@ -14,6 +15,7 @@ import ru.margarita.NauJava.repositories.UserRepository;
 import ru.margarita.NauJava.entities.User;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Класс для взаимодействия с бд через репозиторий
@@ -31,6 +33,9 @@ public class UserController {
     private TaskServiceImpl taskService;
     @Autowired
     private UserDataServiceImpl userDataService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/findByName")
     public User findByName(@RequestParam String name) {
@@ -62,6 +67,26 @@ public class UserController {
 
         userDataService.updateUser(user.getId(), surname, patronymic, job);
         return "ok";
+    }
+
+    @Transactional
+    @PutMapping("/updateMainInfo")
+    public String updateMainInfo(Model model,Long id, String name, String email, String password, Boolean isAdmin) {
+        User oldUser = userService.findUserById(id);
+        System.out.println("///////////old user"+oldUser.getName()+" "+name);
+        //имя не поменялось или уникально
+        if(Objects.equals(oldUser.getName(), name) || userService.findUserByName(name)==null){
+            System.out.println("/////in condition");
+            if(password!="")
+                userService.updateMainInfo(id, name, email, passwordEncoder.encode(password), isAdmin);
+            else{
+                System.out.println("//////////"+isAdmin);
+                userService.updateMainInfo(id, name, email, oldUser.getPassword(), isAdmin);
+            }
+
+            return "ok";
+        }
+        return "invalid name";
     }
 
 //    @Transactional

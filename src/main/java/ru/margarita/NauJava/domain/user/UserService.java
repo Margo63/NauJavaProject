@@ -18,4 +18,6 @@ public interface UserService {
     List<User> getAllUsers();
 
     List<User> findByEmailAndPassword(String email, String password);
+
+    void updateMainInfo(Long id, String name, String email, String password, Boolean isAdmin);
 }

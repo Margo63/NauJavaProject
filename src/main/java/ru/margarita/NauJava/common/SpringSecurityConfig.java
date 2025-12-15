@@ -37,7 +37,7 @@ public class SpringSecurityConfig
                 .authorizeHttpRequests(authz -> authz
 
                         .requestMatchers("/login", "/registration").permitAll()
-                        .requestMatchers("/swagger-ui/**").hasRole(ADMIN)
+                        .requestMatchers("/swagger-ui/**","/admin/**").hasRole(ADMIN)
                         .requestMatchers("/custom/users/**").hasAnyRole(ADMIN, "USER")
                         .requestMatchers("/reports/**").hasRole(ADMIN)
                         .anyRequest().authenticated()
