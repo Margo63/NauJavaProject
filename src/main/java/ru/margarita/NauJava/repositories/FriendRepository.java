@@ -25,14 +25,14 @@ public interface FriendRepository extends CrudRepository<Friend,Long> {
     /**
      * поиск по имени
      * */
-    @Query("SELECT u FROM Friend u JOIN u.user t WHERE t.name LIKE %:name%")
+    @Query("SELECT u FROM Friend u JOIN u.user t WHERE t.name = %:name%")
     List<Friend> findByName(String name);
 
 
     /**
      * поиск по имени друга
      * */
-    @Query("SELECT u FROM Friend u JOIN u.friendUser t WHERE t.name LIKE %:name%")
+    @Query("SELECT u FROM Friend u JOIN u.friendUser t WHERE t.name = %:name%")
     List<Friend> findByFriendName(String name);
 
     /**

@@ -26,27 +26,27 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
     /**
      * поиск задач по имени пользователя
      * */
-    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE %:name%")
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name = %:name%")
     List<Task> findTasksByUserName(String name);
 
 
     /**
      * поиск задач по имени пользователя и категории
      * */
-    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.category.id = :categoryId")
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name = :name AND u.category.id = :categoryId")
     List<Task> findTasksByUserNameAndCategoryId(@Param("name") String name, @Param("categoryId") Long categoryId);
 
     /**
      * поиск задач по имени пользователя, статусу и категории
      * */
-    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.category.id = :categoryId AND u.status.id = :statusId")
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name = :name AND u.category.id = :categoryId AND u.status.id = :statusId")
     List<Task> findTasksByUserNameAndCategoryIdAndStatusId(@Param("name") String name, @Param("categoryId") Long categoryId,
                                                            @Param("statusId") Long statusId);
 
     /**
      * поиск задач по имени пользователя и статусу
      * */
-    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name LIKE :name AND u.status.id = :statusId")
+    @Query("SELECT DISTINCT u FROM Task u JOIN u.user t WHERE t.name = :name AND u.status.id = :statusId")
     List<Task> findTasksByUserNameAndStatusId(@Param("name") String name, @Param("statusId") Long statusId);
 
     /**
