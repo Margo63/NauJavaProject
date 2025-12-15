@@ -45,7 +45,11 @@ public class TaskServiceImpl implements TaskService {
         }
         User user = userRepository.findByName(name).getFirst();
         userDataRepository.deleteById(user.getId());
-        List<Friend> friend = friendRepository.findByName(name);
+
+        //удаление всех друзей
+        friendRepository.deleteByUserId(user.getId());
+
+
         // удалить пользователя
         userRepository.deleteByName(name);
     }

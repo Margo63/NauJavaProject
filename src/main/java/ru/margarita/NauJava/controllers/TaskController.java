@@ -53,7 +53,7 @@ public class TaskController {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = formatter.parse(dueDate);
         taskService.createTask(title, description,categoryId,date, user);
-        return "redirect:/custom/users/view/user";
+        return "ok";
     }
 
     @Transactional
@@ -74,7 +74,7 @@ public class TaskController {
     @DeleteMapping("/delete")
     public String deleteTask(@RequestParam Long id){
         taskService.deleteById(id);
-        return "redirect:/custom/users/view/user";
+        return "ok";
     }
 
     @Transactional
@@ -82,13 +82,13 @@ public class TaskController {
     public String selectStatus(@RequestParam Long taskId, @RequestParam Long newStatusId){
 
         taskService.updateStatus(taskId, newStatusId);
-        return "redirect:/custom/users/view/user";
+        return "ok";
     }
 
     @Transactional
     @PutMapping("/selectCategory")
     public String selectCategory(@RequestParam Long taskId, @RequestParam Long newCategoryId){
         taskService.updateCategory(taskId, newCategoryId);
-        return "redirect:/custom/users/view/user";
+        return "ok";
     }
 }

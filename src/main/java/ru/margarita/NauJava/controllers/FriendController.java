@@ -29,14 +29,14 @@ public class FriendController {
         if(friend!=null && user!=friend)
             friendService.inviteFriend(user, friend);
 
-        return "redirect:/custom/friends/friendList";
+        return "ok";
     }
 
     @Transactional
     @PutMapping("/reject")
     public String rejectFriend(Model model, Long id){
         friendService.updateStatus(id, FriendStatus.REJECT);
-        return "redirect:/custom/friends/friendList";
+        return "ok";
     }
 
     @Transactional
@@ -51,20 +51,20 @@ public class FriendController {
             friendService.updateStatus(id, FriendStatus.ACCEPT);
         }
 
-        return "redirect:/custom/friends/friendList";
+        return "ok";
     }
 
     @Transactional
     @DeleteMapping("/delete")
     public String delete(Model model, Long id){
         friendService.deleteById(id);
-        return "redirect:/custom/friends/friendList";
+        return "ok";
     }
 
     @Transactional
     @DeleteMapping("/deleteFriend")
     public String deleteFriend(Model model, Long id, Long friendId){
         friendService.deleteFriendByUserIdAndFriendId(id,friendId);
-        return "redirect:/custom/friends/friendList";
+        return "ok";
     }
 }

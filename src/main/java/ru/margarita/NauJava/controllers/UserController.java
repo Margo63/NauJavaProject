@@ -51,7 +51,7 @@ public class UserController {
     @DeleteMapping("/delete")
     public String delete(@RequestParam String name) {
         taskService.deleteUserByName(name);
-        return "redirect:/login";
+        return "ok";
     }
 
     @Transactional
@@ -61,7 +61,7 @@ public class UserController {
         userService.updateUserEmail(user.getId(), email);
 
         userDataService.updateUser(user.getId(), surname, patronymic, job);
-        return "redirect:/custom/users/view/user";
+        return "ok";
     }
 
 //    @Transactional
